@@ -24,7 +24,7 @@ export default function Request({ navigation }) {
     else{
         var userList = list
     }
-
+//
     const [don, setDon] = useState({ value: '', error: '' })
     const [email, setEmail] = useState({ value: '', error: '' })
     const [name, setName] = useState({ value: '', error: '' })
