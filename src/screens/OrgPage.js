@@ -11,7 +11,7 @@ import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
 
-export default function Dashboard({ navigation }) {
+export default function OrgPage({ navigation }) {
     const route = useRoute()
 
     const list = route.params?.userList || ""
@@ -23,59 +23,31 @@ export default function Dashboard({ navigation }) {
         var userList = list
     }
 
-    const [org, setOrg] = useState({ value: '', error: '' })
-
-    const onOrgSearchPressed = () => {
-        const orgError = organizationValidator(org.value, userList)
-
-        if (orgError) {
-            setOrg({...org, error: orgError})
-            return
-        }
-
-        navigation.navigate('OrgPage', {userList: userList})
-    }
-
     return (
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
-            <Header>Welcome!</Header>
-            <TextInput
-                label="Organization"
-                returnKeyType="next"
-                value={org.value}
-                onChangeText={(text) => setOrg({ value: text, error: '' })}
-                error={!!org.error}
-                errorText={org.error}
-                autoCapitalize="none"
-                autoCompleteType="org"
-                textContentType="organization"
-                keyboardType="organization"
-            />
-            <Button mode="contained" onPress={onOrgSearchPressed}>
-                Search for Organization
+            <Header>Organization's Page!</Header>
+            <Button
+                mode="contained"
+
+                onPress={() => navigation.navigate('Donate', {userList: userList})}
+            >
+                Donate
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('MapPage', {userList: userList})}
+                onPress={() => navigation.navigate('Request', {userList: userList})}
             >
-                Open Map
+                Request Assistance
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('EditProfile', {userList: userList})}
+                onPress={() => navigation.navigate('Dashboard', {userList: userList})}
             >
-                Edit Profile
-            </Button>
-            <Button
-                mode="contained"
-
-                onPress={() => navigation.navigate('LoginScreen', {userList: userList})}
-            >
-                Sign Out
+                Home
             </Button>
         </Background>
     )

@@ -8,10 +8,10 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
-import { organizationValidator } from '../helpers/organizationValidator'
+import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
 
-export default function Dashboard({ navigation }) {
+export default function Donate({ navigation }) {
     const route = useRoute()
 
     const list = route.params?.userList || ""
@@ -23,13 +23,13 @@ export default function Dashboard({ navigation }) {
         var userList = list
     }
 
-    const [org, setOrg] = useState({ value: '', error: '' })
+    const [don, setDon] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const orgError = organizationValidator(org.value, userList)
+        const donError = donationValidator(don.value, userList)
 
-        if (orgError) {
-            setOrg({...org, error: orgError})
+        if (donError) {
+            setDon({...don, error: donError})
             return
         }
 
@@ -40,42 +40,28 @@ export default function Dashboard({ navigation }) {
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
-            <Header>Welcome!</Header>
+            <Header>Donate to this organization!</Header>
             <TextInput
-                label="Organization"
+                label="Donation"
                 returnKeyType="next"
-                value={org.value}
-                onChangeText={(text) => setOrg({ value: text, error: '' })}
-                error={!!org.error}
-                errorText={org.error}
+                value={don.value}
+                onChangeText={(text) => setDon({ value: text, error: '' })}
+                error={!!don.error}
+                errorText={don.error}
                 autoCapitalize="none"
-                autoCompleteType="org"
-                textContentType="organization"
-                keyboardType="organization"
+                autoCompleteType="don"
+                textContentType="donation"
+                keyboardType="donation"
             />
             <Button mode="contained" onPress={onOrgSearchPressed}>
-                Search for Organization
+                Submit donation
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('MapPage', {userList: userList})}
+                onPress={() => navigation.navigate('OrgPage', {userList: userList})}
             >
-                Open Map
-            </Button>
-            <Button
-                mode="contained"
-
-                onPress={() => navigation.navigate('EditProfile', {userList: userList})}
-            >
-                Edit Profile
-            </Button>
-            <Button
-                mode="contained"
-
-                onPress={() => navigation.navigate('LoginScreen', {userList: userList})}
-            >
-                Sign Out
+                Organization Page
             </Button>
         </Background>
     )

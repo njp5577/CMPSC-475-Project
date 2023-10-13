@@ -13,7 +13,18 @@ import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import { usernameValidator } from '../helpers/usernameValidator'
 import {useRoute} from "@react-navigation/native";
-
+//import * as R from '@realm/react'
+/*
+const schema = {
+    name: "User",
+    properties: {
+        name: "string",
+        email: "string",
+        username: "string",
+        password: "string",
+    }
+}
+*/
 export default function RegisterScreen({ navigation }) {
     const route = useRoute()
 
@@ -25,7 +36,12 @@ export default function RegisterScreen({ navigation }) {
     else{
         var userList = list
     }
-
+    /*
+    const App = async () => {
+        const appId = "application-0-bejnv"
+        const realm = await R.createRealmContext({schema,})
+    }
+    */
   const [name, setName] = useState({ value: '', error: '' })
   const [username, setUsername] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
