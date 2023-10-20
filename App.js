@@ -11,10 +11,11 @@ import {
   RegisterScreen,
   ResetPasswordScreen,
   Dashboard,
-    MapPage,
-    OrgPage,
-    Donate,
-    Request,
+  MapPage,
+  OrgPage,
+  Donate,
+  Request,
+  EditProfile,
 } from './src/screens'
 
 const Stack = createStackNavigator()
@@ -37,6 +38,7 @@ export default function App() {
                   <Stack.Screen name="OrgPage" component={OrgPage} />
                   <Stack.Screen name="Donate" component={Donate} />
                 <Stack.Screen name="Request" component={Request} />
+                <Stack.Screen name="EditProfile" component={EditProfile} />
                 <Stack.Screen
                     name="ResetPasswordScreen"
                     component={ResetPasswordScreen}

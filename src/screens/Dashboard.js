@@ -26,7 +26,7 @@ export default function Dashboard({ navigation }) {
     const [org, setOrg] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const orgError = organizationValidator(org.value, currentUser)
+        const orgError = organizationValidator(org.value)
 
         if (orgError) {
             setOrg({...org, error: orgError})
@@ -56,6 +56,10 @@ export default function Dashboard({ navigation }) {
             <Button mode="contained" onPress={onOrgSearchPressed}>
                 Search for Organization
             </Button>
+
+            <p> </p>
+            <p> </p>
+
             <Button
                 mode="contained"
 

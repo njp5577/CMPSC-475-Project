@@ -8,7 +8,6 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
-import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { usernameValidator } from '../helpers/usernameValidator'
 import { useRoute } from '@react-navigation/native'
@@ -26,20 +25,17 @@ export default function LoginScreen({ navigation }){
         var currentUser = current
     }
 
-  const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [username, setUsername] = useState({ value: '', error: '' })
 
   const onLoginPressed = async () => {
-      const emailError = emailValidator(email.value)
       const passwordError = passwordValidator(password.value)
       const usernameError = usernameValidator(username.value)
       let inList = 0
 
       const usersRef = firebase.firestore().collection('Users')
 
-      if (emailError || passwordError || usernameError) {
-          setEmail({...email, error: emailError})
+      if (passwordError || usernameError) {
           setPassword({...password, error: passwordError})
           setUsername({...username, error: usernameError})
           return
@@ -57,7 +53,6 @@ export default function LoginScreen({ navigation }){
       }
 
       if (inList == 0) {
-          setEmail({...email, error: "Incorrect Login Info"})
           setPassword({...password, error: "Incorrect Login Info"})
           setUsername({...username, error: "Incorrect Login Info"})
           return
@@ -73,18 +68,6 @@ export default function LoginScreen({ navigation }){
       <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Hello.</Header>
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
       <TextInput
         label="Username"
         returnKeyType="next"

@@ -86,7 +86,7 @@ export default function ResetPasswordScreen({ navigation }) {
         description="Your password will be reset"
       />
         <TextInput
-            label="Password"
+            label="New Password"
             returnKeyType="done"
             value={password.value}
             onChangeText={(text) => setPassword({ value: text, error: '' })}
@@ -95,7 +95,7 @@ export default function ResetPasswordScreen({ navigation }) {
             secureTextEntry
         />
         <TextInput
-            label="ConfirmPassword"
+            label="Confirm Password"
             returnKeyType="done"
             value={confirmPassword.value}
             onChangeText={(text) => setConfirmPassword({ value: text, error: '' })}
