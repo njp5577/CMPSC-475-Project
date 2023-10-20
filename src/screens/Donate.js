@@ -14,26 +14,26 @@ import { useRoute } from '@react-navigation/native'
 export default function Donate({ navigation }) {
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
 
     const [don, setDon] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const donError = donationValidator(don.value, userList)
+        const donError = donationValidator(don.value)
 
         if (donError) {
             setDon({...don, error: donError})
             return
         }
 
-        navigation.navigate('OrgPage', {userList: userList})
+        navigation.navigate('OrgPage', {currentUser: currentUser})
     }
 
     return (
@@ -59,7 +59,7 @@ export default function Donate({ navigation }) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('OrgPage', {userList: userList})}
+                onPress={() => navigation.navigate('OrgPage', {currentUser: currentUser})}
             >
                 Organization Page
             </Button>

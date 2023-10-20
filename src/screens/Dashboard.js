@@ -14,33 +14,33 @@ import { useRoute } from '@react-navigation/native'
 export default function Dashboard({ navigation }) {
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
 
     const [org, setOrg] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const orgError = organizationValidator(org.value, userList)
+        const orgError = organizationValidator(org.value, currentUser)
 
         if (orgError) {
             setOrg({...org, error: orgError})
             return
         }
 
-        navigation.navigate('OrgPage', {userList: userList})
+        navigation.navigate('OrgPage', {currentUser: currentUser})
     }
 
     return (
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
-            <Header>Welcome!</Header>
+            <Header>Welcome {currentUser}!</Header>
             <TextInput
                 label="Organization"
                 returnKeyType="next"
@@ -59,21 +59,21 @@ export default function Dashboard({ navigation }) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('MapPage', {userList: userList})}
+                onPress={() => navigation.navigate('MapPage', {currentUser: currentUser})}
             >
                 Open Map
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('EditProfile', {userList: userList})}
+                onPress={() => navigation.navigate('EditProfile', {currentUser: currentUser})}
             >
                 Edit Profile
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('LoginScreen', {userList: userList})}
+                onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}
             >
                 Sign Out
             </Button>

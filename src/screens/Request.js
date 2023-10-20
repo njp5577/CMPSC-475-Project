@@ -16,13 +16,13 @@ import { useRoute } from '@react-navigation/native'
 export default function Request({ navigation }) {
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
 //
     const [don, setDon] = useState({ value: '', error: '' })
@@ -30,9 +30,9 @@ export default function Request({ navigation }) {
     const [name, setName] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const donError = donationValidator(don.value, userList)
-        const emailError = emailValidator(email.value, userList)
-        const nameError = nameValidator(name.value, userList)
+        const donError = donationValidator(don.value)
+        const emailError = emailValidator(email.value)
+        const nameError = nameValidator(name.value)
 
         if (donError || emailError || nameError) {
             setDon({...don, error: donError})
@@ -41,7 +41,7 @@ export default function Request({ navigation }) {
             return
         }
 
-        navigation.navigate('OrgPage', {userList: userList})
+        navigation.navigate('OrgPage', {currentUser: currentUser})
     }
 
     return (
@@ -87,7 +87,7 @@ export default function Request({ navigation }) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('OrgPage', {userList: userList})}
+                onPress={() => navigation.navigate('OrgPage', {currentUser: currentUser})}
             >
                 Organization Page
             </Button>

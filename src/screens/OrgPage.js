@@ -14,13 +14,13 @@ import { useRoute } from '@react-navigation/native'
 export default function OrgPage({ navigation }) {
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
 
     return (
@@ -31,21 +31,21 @@ export default function OrgPage({ navigation }) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Donate', {userList: userList})}
+                onPress={() => navigation.navigate('Donate', {currentUser: currentUser})}
             >
                 Donate
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Request', {userList: userList})}
+                onPress={() => navigation.navigate('Request', {currentUser: currentUser})}
             >
                 Request Assistance
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Dashboard', {userList: userList})}
+                onPress={() => navigation.navigate('Dashboard', {currentUser: currentUser})}
             >
                 Home
             </Button>

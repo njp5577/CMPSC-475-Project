@@ -12,49 +12,60 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { usernameValidator } from '../helpers/usernameValidator'
 import { useRoute } from '@react-navigation/native'
+import {firebase} from "../firebase/config";
 
 export default function LoginScreen({ navigation }){
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
 
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [username, setUsername] = useState({ value: '', error: '' })
 
-  const onLoginPressed = () => {
-    const emailError = emailValidator(email.value, userList)
-    const passwordError = passwordValidator(password.value, userList)
-    const usernameError = usernameValidator(username.value, userList)
-    let inList = 0
+  const onLoginPressed = async () => {
+      const emailError = emailValidator(email.value)
+      const passwordError = passwordValidator(password.value)
+      const usernameError = usernameValidator(username.value)
+      let inList = 0
 
-    if (emailError || passwordError || usernameError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      setUsername({ ...username, error: usernameError })
-      return
-    }
+      const usersRef = firebase.firestore().collection('Users')
 
-      for (let i = 0; i < userList.length; i++){
-          if(userList[(4 * i) + 2] == email.value.toString() && userList[(4 * i) + 1] == password.value.toString() && userList[(4 * i) + 0] == username.value.toString()){
-              inList = 1
-          }
+      if (emailError || passwordError || usernameError) {
+          setEmail({...email, error: emailError})
+          setPassword({...password, error: passwordError})
+          setUsername({...username, error: usernameError})
+          return
       }
 
-    if (inList == 0){
-        setEmail({ ...email, error: "Incorrect Login Info" })
-        setPassword({ ...password, error: "Incorrect Login Info" })
-        setUsername({ ...username, error: "Incorrect Login Info" })
-        return
-    }
-    navigation.navigate("Dashboard", {userList: userList})
+      const accountRef = usersRef.where("username", "==", username.value.toString())
+          .where("password", "==", password.value.toString());
+      const docOne = await accountRef.get();
+      if (docOne.empty) {
+          console.log('User does not exist!');
+          inList = 0
+      }
+      else{
+          inList = 1
+      }
+
+      if (inList == 0) {
+          setEmail({...email, error: "Incorrect Login Info"})
+          setPassword({...password, error: "Incorrect Login Info"})
+          setUsername({...username, error: "Incorrect Login Info"})
+          return
+      }
+
+      currentUser = username.value.toString()
+
+      navigation.navigate("Dashboard", {currentUser: currentUser})
   }
 
   return (
@@ -93,7 +104,7 @@ export default function LoginScreen({ navigation }){
       />
       <View style={styles.forgotPassword}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen', {userList: userList})}
+          onPress={() => navigation.navigate('ResetPasswordScreen', {currentUser: currentUser})}
         >
           <Text style={styles.forgot}>Forgot password?</Text>
         </TouchableOpacity>
@@ -105,7 +116,7 @@ export default function LoginScreen({ navigation }){
         <Text>You do not have an account?</Text>
       </View>
       <View style={styles.row}>
-      <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen', {userList: userList})}>
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen', {currentUser: currentUser})}>
           <Text style={styles.link}>Sign Up</Text>
         </TouchableOpacity>
       </View>

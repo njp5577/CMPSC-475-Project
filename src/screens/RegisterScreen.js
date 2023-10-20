@@ -13,73 +13,77 @@ import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import { usernameValidator } from '../helpers/usernameValidator'
 import {useRoute} from "@react-navigation/native";
-//import * as R from '@realm/react'
-/*
-const schema = {
-    name: "User",
-    properties: {
-        name: "string",
-        email: "string",
-        username: "string",
-        password: "string",
-    }
+import { firebase } from '../firebase/config'
+
+const user = {
+    username: String,
+    password: String,
+    email: String,
+    name: String,
 }
-*/
+
 export default function RegisterScreen({ navigation }) {
     const route = useRoute()
 
-    const list = route.params?.userList || ""
+    const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(list) == "\"\""){
-        var userList = ["admin", "admin1234", "admin@admin.com", "admin"]
+    if(JSON.stringify(current) == "\"\""){
+        var currentUser = null
     }
     else{
-        var userList = list
+        var currentUser = current
     }
-    /*
-    const App = async () => {
-        const appId = "application-0-bejnv"
-        const realm = await R.createRealmContext({schema,})
-    }
-    */
+
+    const usersRef = firebase.firestore().collection('Users')
+
   const [name, setName] = useState({ value: '', error: '' })
   const [username, setUsername] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
 
-  const onSignUpPressed = () => {
-    const nameError = nameValidator(name.value)
-    const usernameError = usernameValidator(username.value)
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    var alreadyIn = 0
+  const onSignUpPressed = async () => {
+      const nameError = nameValidator(name.value)
+      const usernameError = usernameValidator(username.value)
+      const emailError = emailValidator(email.value)
+      const passwordError = passwordValidator(password.value)
+      var alreadyIn = 0
 
-    if (emailError || passwordError || nameError || usernameError) {
-      setName({ ...name, error: nameError})//JSON.stringify(userList) + "hi" + (typeof userList).toString()
-      setUsername({ ...username, error: usernameError})
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
-    }
-
-      for (let i = 0; i < userList.length; i++){
-          if(userList[(4 * i) + 2] == email.value.toString()){
-              alreadyIn = 1
-          }
+      if (emailError || passwordError || nameError || usernameError) {
+          setName({...name, error: nameError})//JSON.stringify(userList) + "hi" + (typeof userList).toString()
+          setUsername({...username, error: usernameError})
+          setEmail({...email, error: emailError})
+          setPassword({...password, error: passwordError})
+          return
       }
 
-    if (alreadyIn == 1){
-        setEmail({ ...email, error: "Account under this email or username already exists" })
-        setUsername({ ...username, error: "Account under this email or username already exists" })
-        return
-    }
-    else{
-        userList.push(username.value.toString())
-        userList.push(password.value.toString())
-        userList.push(email.value.toString())
-        userList.push(name.value.toString())
-    }
-    navigation.navigate("LoginScreen", {userList: userList})
+      const usernameRef = usersRef.where("username", "==", username.value.toString());
+      const docOne = await usernameRef.get();
+      if (!docOne.empty) {
+          console.log('User with this username already exists!');
+          alreadyIn = 1
+      }
+
+      const emailRef = usersRef.where("email", "==", email.value.toString());
+      const docTwo = await emailRef.get();
+      if (!docTwo.empty) {
+          console.log('User with this email already exists!');
+          alreadyIn = 1
+      }
+
+      if (alreadyIn == 1) {
+          setEmail({...email, error: "Account under this email or username already exists"})
+          setUsername({...username, error: "Account under this email or username already exists"})
+          return
+      } else {
+          //userList.push(username.value.toString())
+          //userList.push(password.value.toString())
+          //userList.push(email.value.toString())
+          //userList.push(name.value.toString())
+
+          usersRef.doc(username.value.toString()).set({username: username.value.toString(), password: password.value.toString(),
+              email: email.value.toString(), name: name.value.toString()}).then()
+      }
+      navigation.navigate("LoginScreen", {currentUser: currentUser})
   }
 
   return (
@@ -135,7 +139,7 @@ export default function RegisterScreen({ navigation }) {
         <Text>Already have an account?</Text>
       </View>
       <View style={styles.row}>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen', {userList: userList})}>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}>
           <Text style={styles.link}>Log in</Text>
         </TouchableOpacity>
       </View>
