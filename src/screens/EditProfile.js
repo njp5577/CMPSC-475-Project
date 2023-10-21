@@ -18,7 +18,7 @@ export default function EditProfile ({navigation}) {
     const current = route.params?.currentUser || ""
 
     if (JSON.stringify(current) == "\"\"") {
-        var currentUser = null
+        var currentUser = "No User"
     } else {
         var currentUser = current
     }
@@ -53,7 +53,7 @@ export default function EditProfile ({navigation}) {
         }
 
         getInfo().then()
-    })
+    }, [])
 
     return (
         <Background>

@@ -19,7 +19,7 @@ export default function Request({ navigation }) {
     const current = route.params?.currentUser || ""
 
     if(JSON.stringify(current) == "\"\""){
-        var currentUser = null
+        var currentUser = "No User"
     }
     else{
         var currentUser = current
@@ -78,8 +78,6 @@ export default function Request({ navigation }) {
                 errorText={don.error}
                 autoCapitalize="none"
                 autoCompleteType="don"
-                textContentType="donation"
-                keyboardType="donation"
             />
             <Button mode="contained" onPress={onOrgSearchPressed}>
                 Request donation

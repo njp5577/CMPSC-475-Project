@@ -17,7 +17,7 @@ export default function Donate({ navigation }) {
     const current = route.params?.currentUser || ""
 
     if(JSON.stringify(current) == "\"\""){
-        var currentUser = null
+        var currentUser = "No User"
     }
     else{
         var currentUser = current
@@ -50,8 +50,6 @@ export default function Donate({ navigation }) {
                 errorText={don.error}
                 autoCapitalize="none"
                 autoCompleteType="don"
-                textContentType="donation"
-                keyboardType="donation"
             />
             <Button mode="contained" onPress={onOrgSearchPressed}>
                 Submit donation

@@ -17,7 +17,7 @@ export default function Dashboard({ navigation }) {
     const current = route.params?.currentUser || ""
 
     if(JSON.stringify(current) == "\"\""){
-        var currentUser = null
+        var currentUser = "No User"
     }
     else{
         var currentUser = current
@@ -50,15 +50,10 @@ export default function Dashboard({ navigation }) {
                 errorText={org.error}
                 autoCapitalize="none"
                 autoCompleteType="org"
-                textContentType="organization"
-                keyboardType="organization"
             />
             <Button mode="contained" onPress={onOrgSearchPressed}>
                 Search for Organization
             </Button>
-
-            <p> </p>
-            <p> </p>
 
             <Button
                 mode="contained"
@@ -72,7 +67,7 @@ export default function Dashboard({ navigation }) {
 
                 onPress={() => navigation.navigate('EditProfile', {currentUser: currentUser})}
             >
-                Edit Profile
+                Profile
             </Button>
             <Button
                 mode="contained"
