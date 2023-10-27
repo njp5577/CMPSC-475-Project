@@ -11,6 +11,8 @@ import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
 import { GoogleMap, useLoadScript, useJsApiLoader } from "@react-google-maps/api";
+import { WebView } from 'react-native-webview';
+
 
 export default function MapPage({ navigation }) {
     const route = useRoute()
@@ -19,16 +21,6 @@ export default function MapPage({ navigation }) {
 
     const apiKey = "AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE";
     
-    const { isLoaded } = useLoadScript({
-        googleMapsApiKey: apiKey,
-    })
-
-    
-  
-    if (!isLoaded) {
-      return <div>Loading Google Maps...</div>;
-    }
-
     if(JSON.stringify(current) == "\"\""){
         var currentUser = "No User"
     }
@@ -39,44 +31,56 @@ export default function MapPage({ navigation }) {
     var mapSourceOne = "https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20"
     var mapSourceTwo = "%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE"
     var totalMap = mapSourceOne + City + mapSourceTwo
-    return (
-        <Background>
-            <BackButton goBack={navigation.goBack} />
-            <Logo />
-            <Header></Header>
-            <div> <iframe src= { totalMap } 
-                width="600" 
-                height="450" 
-                style= {{ border:0 }} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade">
-            </iframe></div>
-            <Button
-                mode="contained"
+    var realMap = <iframe src= { totalMap } 
+    width="600" 
+    height="450" 
+    style= {{ border:0 }} 
+    allowFullScreen="" 
+    loading="lazy" 
+    referrerPolicy="no-referrer-when-downgrade">
+    
+    </iframe>
+//https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20Erie%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE
+    //            <WebView source = {{ html: '<iframe src= "" width="600" height="450" style= {{ border:0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade">' }}>
 
-                onPress={() => navigation.navigate('Dashboard', {currentUser: currentUser})}
-            >
-            
-                Home
-            </Button>
-            
-        </Background>
-        // <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1761.705055112449!2d-80.26037584435541!3d42.04697717393282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88327a10c2b6b201%3A0xd6f7e235306071bd!2sAvonia%20Tavern!5e0!3m2!1sen!2sus!4v1698280894476!5m2!1sen!2sus" 
-        //     width="600" 
-        //     height="450" 
-        //     style= {{ border:0 }} 
-        //     allowfullscreen="" 
-        //     loading="lazy" 
-        //     referrerpolicy="no-referrer-when-downgrade">
-        // </iframe>
+    return (
+
         
+    
+            
+      
+    <>
+    
+    
+    <View style={{ flex: 1, margin: 20 }}>
+            <WebView
+                style={{ flex: 1, marginTop: 20, zIndex: 3 }}
+                originWhitelist={['*']}
+                javaScriptEnabled={true}
+                source={{
+                    html: `<iframe
+            width="100%"
+            height="100%"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen = 
+            referrerpolicy="no-referrer-when-downgrade"
+            src="${totalMap}">
+            </iframe>`
+                }} />
+        </View>
+        <Button
+            mode="contained"
+
+            onPress={() => navigation.navigate('Dashboard', { currentUser: currentUser })}>
+
+            Home
+        </Button>
+    </>
+            
     )
 }
 
-function Map(){
-    return <GoogleMap zoom={10} center= {{lat: 44, lng: -80}} mapContainerClassName='mapSheet' ></GoogleMap>
-}
 
 const styles = StyleSheet.create({
     forgotPassword: {
@@ -99,6 +103,10 @@ const styles = StyleSheet.create({
     mapSheet: {
         width: '100%',
         height: "100%"
-    }
+    },
+    map: {
+        width: '100%',
+        height: '100%',
+      },
 
 })
