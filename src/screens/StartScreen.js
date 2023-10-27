@@ -19,6 +19,15 @@ export default function StartScreen({ navigation }) {
         var currentUser = current
     }
 
+    const orgCurrent = route.params?.currentOrg || ""
+
+    if(JSON.stringify(orgCurrent) == "\"\""){
+        var currentOrg = "No Org"
+    }
+    else{
+        var currentOrg = orgCurrent
+    }
+
   return (
     <Background>
       <Logo />
@@ -39,6 +48,18 @@ export default function StartScreen({ navigation }) {
       >
         Create an account
       </Button>
+        <Button
+            mode="outlined"
+            onPress={() => navigation.navigate('OrgLogin', {currentOrg: currentOrg})}
+        >
+            Organization Login
+        </Button>
+        <Button
+            mode="outlined"
+            onPress={() => navigation.navigate('OrgRegister', {currentOrg: currentOrg})}
+        >
+            Register Organization
+        </Button>
     </Background>
   )
 }

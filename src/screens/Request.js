@@ -12,6 +12,7 @@ import { emailValidator } from '../helpers/emailValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
+import Navbar from "../components/navbar";
 
 export default function Request({ navigation }) {
     const route = useRoute()
@@ -45,6 +46,8 @@ export default function Request({ navigation }) {
     }
 
     return (
+        <>
+            <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
@@ -90,6 +93,7 @@ export default function Request({ navigation }) {
                 Organization Page
             </Button>
         </Background>
+            </>
     )
 }
 

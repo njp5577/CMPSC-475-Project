@@ -10,6 +10,7 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
+import Navbar from "../components/navbar";
 
 export default function Donate({ navigation }) {
     const route = useRoute()
@@ -37,6 +38,8 @@ export default function Donate({ navigation }) {
     }
 
     return (
+        <>
+            <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
@@ -62,6 +65,7 @@ export default function Donate({ navigation }) {
                 Organization Page
             </Button>
         </Background>
+        </>
     )
 }
 

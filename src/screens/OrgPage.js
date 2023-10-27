@@ -10,6 +10,7 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
+import Navbar from "../components/navbar";
 
 export default function OrgPage({ navigation }) {
     const route = useRoute()
@@ -24,6 +25,8 @@ export default function OrgPage({ navigation }) {
     }
 
     return (
+        <>
+            <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
@@ -50,6 +53,7 @@ export default function OrgPage({ navigation }) {
                 Home
             </Button>
         </Background>
+        </>
     )
 }
 
