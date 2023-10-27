@@ -7,9 +7,11 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
+
 import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
+import Navbar from '../components/navbar'
 
 export default function Dashboard({ navigation }) {
     const route = useRoute()
@@ -37,8 +39,12 @@ export default function Dashboard({ navigation }) {
     }
 
     return (
-        <Background>
-            <BackButton goBack={navigation.goBack} />
+        <>
+        <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+        
+        <Background> 
+            
+            
             <Logo />
             <Header>Welcome {currentUser}!</Header>
             <TextInput
@@ -77,6 +83,7 @@ export default function Dashboard({ navigation }) {
                 Sign Out
             </Button>
         </Background>
+        </>
     )
 }
 

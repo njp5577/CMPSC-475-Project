@@ -12,7 +12,7 @@ import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
 import { GoogleMap, useLoadScript, useJsApiLoader } from "@react-google-maps/api";
 import { WebView } from 'react-native-webview';
-
+import Navbar from '../components/navbar'
 
 export default function MapPage({ navigation }) {
     const route = useRoute()
@@ -51,7 +51,7 @@ export default function MapPage({ navigation }) {
       
     <>
     
-    
+    <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
     <View style={{ flex: 1, margin: 20 }}>
             <WebView
                 style={{ flex: 1, marginTop: 20, zIndex: 3 }}

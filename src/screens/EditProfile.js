@@ -10,7 +10,7 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { useRoute } from '@react-navigation/native'
 import {firebase} from "../firebase/config";
-
+import Navbar from '../components/navbar'
 
 export default function EditProfile ({navigation}) {
     const route = useRoute()
@@ -56,8 +56,10 @@ export default function EditProfile ({navigation}) {
     }, [])
 
     return (
+        <>
+        <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
-            <BackButton goBack={navigation.goBack}/>
+            
             <Logo/>
             <Header>Your Profile</Header>
 
@@ -75,6 +77,7 @@ export default function EditProfile ({navigation}) {
                 Home
             </Button>
         </Background>
+        </>
     )
 }
 
