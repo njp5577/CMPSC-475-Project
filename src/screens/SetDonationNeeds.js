@@ -36,31 +36,6 @@ export default function SetDonationNeeds ({navigation}) {
 
     const postingRef = needRef.where("email", "==", currentOrg.toString());
 
-    useEffect(() => {
-        const getInfo = async () => {
-
-            var needList = []
-
-            try {
-                const docOne = await postingRef.get();
-
-                console.log(docOne.size)
-
-                for(var i = 0; i < docOne.size; i++){
-                    needList.push(docOne.docs[i])
-                }
-
-                await setNeeds({value: needList})
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        getInfo().then()
-
-    }, [])
-
     const needCards = needs.value.map((item, pos) =>{
 
         return (
@@ -98,11 +73,41 @@ export default function SetDonationNeeds ({navigation}) {
             return
         }
         else{
-            needRef.doc(item.value.toString()).set({email: currentOrg.toString(), need: item.value.toString(), desc: desc.value.toString()}).then()
+            const docName = item.value.toString() + " : " + currentOrg.toString()
+
+            needRef.doc(docName).set({email: currentOrg.toString(), need: item.value.toString(), desc: desc.value.toString()}).then()
+
+            setItem({ value: '', error: '' })
+            setDesc({ value: '', error: '' })
         }
 
-        navigation.navigate("OrgDashboard", {currentOrg: currentOrg})
+        //navigation.navigate("OrgDashboard", {currentOrg: currentOrg})
     }
+
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var needList = []
+
+            try {
+                const docOne = await postingRef.get();
+
+                console.log(docOne.size)
+
+                for(var i = 0; i < docOne.size; i++){
+                    needList.push(docOne.docs[i])
+                }
+
+                await setNeeds({value: needList})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [onAddRequestPressed])
 
     return (
         <>
