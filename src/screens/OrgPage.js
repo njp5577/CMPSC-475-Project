@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -11,6 +11,7 @@ import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
 import Navbar from "../components/navbar";
+import {firebase} from "../firebase/config";
 
 export default function OrgPage({ navigation }) {
     const route = useRoute()
@@ -24,33 +25,98 @@ export default function OrgPage({ navigation }) {
         var currentUser = current
     }
 
+    const orgCurrent = route.params?.currentOrg || ""
+
+    if(JSON.stringify(orgCurrent) == "\"\""){
+        var currentOrg = "No Org"
+    }
+    else{
+        var currentOrg = orgCurrent
+    }
+
+    const [email, setEmail] = useState({ value: ''})
+    const [phone, setPhone] = useState({ value: ''})
+    const [street, setStreet] = useState({ value: ''})
+    const [state, setState] = useState({ value: ''})
+    const [city, setCity] = useState({ value: ''})
+    const [name, setName] = useState({ value: ''})
+
+    const orgRef = firebase.firestore().collection('Orgs')
+
+    const accountRef = orgRef.where("email", "==", currentOrg.toString());
+
+    useEffect(() => {
+        const getInfo = async () => {
+            var emailString
+
+            var nameString
+
+            var cityString
+
+            var stateString
+
+            var streetString
+
+            try {
+                const docOne = await accountRef.get();
+
+                nameString = await (docOne.docs[0].get("name")).toString()
+
+                await setName({value: nameString})
+
+                emailString = await (docOne.docs[0].get("email")).toString()
+
+                await setEmail({value: emailString})
+
+                phoneString = await (docOne.docs[0].get("phone")).toString()
+
+                await setPhone({value: phoneString})
+
+                cityString = await (docOne.docs[0].get("city")).toString()
+
+                await setCity({value: cityString})
+
+                stateString = await (docOne.docs[0].get("state")).toString()
+
+                await setState({value: stateString})
+
+                streetString = await (docOne.docs[0].get("street")).toString()
+
+                await setStreet({value: streetString})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+    }, [])
+
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
-            <BackButton goBack={navigation.goBack} />
             <Logo />
-            <Header>Organization's Page!</Header>
+            <Header>{name.value}</Header>
+
+            <Text>Email: {email.value}</Text>
+
+            <Text>Phone Number: {phone.value}</Text>
+
+            <Text>Address: {street.value + ", " + city.value + ", " + state.value}</Text>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Donate', {currentUser: currentUser})}
+                onPress={() => navigation.navigate('Donate', {currentUser: currentUser, currentOrg: currentOrg})}
             >
                 Donate
             </Button>
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Request', {currentUser: currentUser})}
+                onPress={() => navigation.navigate('Request', {currentUser: currentUser, currentOrg: currentOrg})}
             >
                 Request Assistance
-            </Button>
-            <Button
-                mode="contained"
-
-                onPress={() => navigation.navigate('Dashboard', {currentUser: currentUser})}
-            >
-                Home
             </Button>
         </Background>
         </>

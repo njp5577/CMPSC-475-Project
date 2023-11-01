@@ -49,7 +49,6 @@ export default function Request({ navigation }) {
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
         <Background>
-            <BackButton goBack={navigation.goBack} />
             <Logo />
             <Header>Donate to this organization!</Header>
             <TextInput

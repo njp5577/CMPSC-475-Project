@@ -28,7 +28,7 @@ export default function OrgMapPage({ navigation }) {
         var currentOrg = orgCurrent
     }
 
-    const City = "Hershey"
+    const City = "Erie"
     var mapSourceOne = "https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20"
     var mapSourceTwo = "%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE"
     var totalMap = mapSourceOne + City + mapSourceTwo

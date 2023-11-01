@@ -61,7 +61,7 @@ export default function OrgProfile ({navigation}) {
             <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
             <Background>
                 <Logo/>
-                <Header>Your Profile</Header>
+                <Header>Organization Profile</Header>
 
                 <Text>Name: {name.value}</Text>
 

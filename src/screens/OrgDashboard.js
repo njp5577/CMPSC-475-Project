@@ -34,23 +34,16 @@ export default function OrgDashboard({ navigation }) {
                 <Button
                     mode="contained"
 
+                    onPress={() => navigation.navigate('SetDonationNeeds', {currentOrg: currentOrg})}
+                >
+                    Manage Incoming Donations
+                </Button>
+                <Button
+                    mode="contained"
+
                     onPress={() => navigation.navigate('OrgMapPage', {currentOrg: currentOrg})}
                 >
                     Open Map
-                </Button>
-                <Button
-                    mode="contained"
-
-                    onPress={() => navigation.navigate('OrgProfile', {currentOrg: currentOrg})}
-                >
-                    Organization Info
-                </Button>
-                <Button
-                    mode="contained"
-
-                    onPress={() => navigation.navigate('SetDonationNeeds', {currentOrg: currentOrg})}
-                >
-                    Edit Donation Needs
                 </Button>
                 <Button
                     mode="contained"

@@ -90,7 +90,7 @@ export default function RegisterScreen({ navigation }) {
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
-      <Header>Welcome.</Header>
+      <Header>Register</Header>
       <TextInput
         label="Name"
         returnKeyType="next"

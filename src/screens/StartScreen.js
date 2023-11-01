@@ -49,7 +49,7 @@ export default function StartScreen({ navigation }) {
         Create an account
       </Button>
         <Button
-            mode="outlined"
+            mode="contained"
             onPress={() => navigation.navigate('OrgLogin', {currentOrg: currentOrg})}
         >
             Organization Login

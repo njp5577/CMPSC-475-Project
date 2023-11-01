@@ -67,7 +67,7 @@ export default function OrgLogin({ navigation }){
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
-            <Header>Hello.</Header>
+            <Header>Login</Header>
             <TextInput
                 label="Email"
                 returnKeyType="next"
@@ -87,7 +87,7 @@ export default function OrgLogin({ navigation }){
             />
             <View style={styles.forgotPassword}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('ResetPasswordScreen')}
+                    onPress={() => navigation.navigate('OrgResetPassword')}
                 >
                     <Text style={styles.forgot}>Forgot password?</Text>
                 </TouchableOpacity>

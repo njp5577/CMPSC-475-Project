@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
-
+import {firebase} from "../firebase/config";
 import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
@@ -27,7 +27,7 @@ export default function Dashboard({ navigation }) {
 
     const [org, setOrg] = useState({ value: '', error: '' })
 
-    const onOrgSearchPressed = () => {
+    const onOrgSearchPressed = async () => {
         const orgError = organizationValidator(org.value)
 
         if (orgError) {
@@ -35,7 +35,27 @@ export default function Dashboard({ navigation }) {
             return
         }
 
-        navigation.navigate('OrgPage', {currentUser: currentUser})
+        let inList = 0
+
+        const orgRef = firebase.firestore().collection('Orgs')
+
+        const accountRef = orgRef.where("name", "==", org.value.toString());
+        const docOne = await accountRef.get();
+        if (docOne.empty) {
+            console.log('Organization does not exist!');
+            setOrg({...org, error: "This organization does not exist"})
+            inList = 0
+            return
+        }
+        else{
+            inList = 1
+        }
+
+        if (inList == 1) {
+            var currentOrg = docOne.docs[0].get("email").toString()
+
+            navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})
+        }
     }
 
     return (
@@ -67,13 +87,6 @@ export default function Dashboard({ navigation }) {
                 onPress={() => navigation.navigate('MapPage', {currentUser: currentUser})}
             >
                 Open Map
-            </Button>
-            <Button
-                mode="contained"
-
-                onPress={() => navigation.navigate('EditProfile', {currentUser: currentUser})}
-            >
-                Profile
             </Button>
             <Button
                 mode="contained"

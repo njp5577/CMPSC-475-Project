@@ -72,9 +72,9 @@ export default function EditProfile ({navigation}) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('Dashboard', {currentUser: currentUser})}
+                onPress={() => navigation.navigate('ResetPasswordScreen', {currentUser: currentUser})}
             >
-                Home
+                Reset Password
             </Button>
         </Background>
         </>

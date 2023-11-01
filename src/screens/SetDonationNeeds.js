@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -12,6 +12,8 @@ import { useRoute } from '@react-navigation/native'
 import {firebase} from "../firebase/config";
 import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
+import { itemValidator } from '../helpers/itemValidator'
+import { descriptionValidator } from '../helpers/descriptionValidator'
 
 
 export default function SetDonationNeeds ({navigation}) {
@@ -26,9 +28,9 @@ export default function SetDonationNeeds ({navigation}) {
     }
 
     const [email, setEmail] = useState({ value: ''})
-    const [acceptedNeeds, setAcceptedNeeds] = useState({ value: []})
-    const [pendingNeeds, setPendingNeeds] = useState({ value: []})
-    const [declinedNeeds, setDeclinedNeeds] = useState({ value: []})
+    const [needs, setNeeds] = useState({ value: []})
+    const [item, setItem] = useState({ value: '', error: '' })
+    const [desc, setDesc] = useState({ value: '', error: '' })
 
     const needRef = firebase.firestore().collection('DonationNeeds')
 
@@ -37,9 +39,7 @@ export default function SetDonationNeeds ({navigation}) {
     useEffect(() => {
         const getInfo = async () => {
 
-            var acceptedNeedList = []
-            var pendingNeedList = []
-            var declinedNeedList = []
+            var needList = []
 
             try {
                 const docOne = await postingRef.get();
@@ -47,20 +47,10 @@ export default function SetDonationNeeds ({navigation}) {
                 console.log(docOne.size)
 
                 for(var i = 0; i < docOne.size; i++){
-                    if(docOne.docs[i].get("status").toString() == "accepted"){
-                        acceptedNeedList.push(docOne.docs[i])
-                    }
-                    else if(docOne.docs[i].get("status").toString() == "pending"){
-                        pendingNeedList.push(docOne.docs[i])
-                    }
-                    else{
-                        declinedNeedList.push(docOne.docs[i])
-                    }
+                    needList.push(docOne.docs[i])
                 }
 
-                await setAcceptedNeeds({value: acceptedNeedList})
-                await setPendingNeeds({value: pendingNeedList})
-                await setDeclinedNeeds({value: declinedNeedList})
+                await setNeeds({value: needList})
 
             } catch (err) {
                 console.log(err)
@@ -71,63 +61,91 @@ export default function SetDonationNeeds ({navigation}) {
 
     }, [])
 
-    const acceptedNeedCards = acceptedNeeds.value.map((item, pos) =>{
+    const needCards = needs.value.map((item, pos) =>{
 
         return (
             <View className="NeedCard" key={pos}>
                 <Text>{item.get("need").toString()}</Text>
-                <Text>{item.get("description").toString()}</Text>
+                <Text>{item.get("desc").toString()}{"\n"}</Text>
             </View>
         )
     })
 
-    const pendingNeedCards = pendingNeeds.value.map((item, pos) =>{
+    const onAddRequestPressed = async () => {
+        const itemError = itemValidator(item.value)
+        const descError = descriptionValidator(desc.value)
+        let inList = 0
 
-        return (
-            <View className="NeedCard" key={pos}>
-                <Text>{item.get("need").toString()}</Text>
-                <Text>{item.get("description").toString()}</Text>
-            </View>
-        )
-    })
+        if (itemError || descError) {
+            setItem({...item, error: itemError})
+            setDesc({...desc, error: descError})
+            return
+        }
+        
+        const itemPostingRef = needRef.where("email", "==", currentOrg.toString()).where("need", "==", item.value.toString());
 
-    const declinedNeedCards = declinedNeeds.value.map((item, pos) =>{
+        const docOne = await itemPostingRef.get();
+        if (docOne.empty) {
+            inList = 0
+        }
+        else{
+            console.log('Item already requested!');
+            inList = 1
+        }
 
-        return (
-            <View className="NeedCard" key={pos}>
-                <Text>{item.get("need").toString()}</Text>
-                <Text>{item.get("description").toString()}</Text>
-            </View>
-        )
-    })
+        if (inList == 1) {
+            setItem({...item, error: "Item already requested"})
+            return
+        }
+        else{
+            needRef.doc(item.value.toString()).set({email: currentOrg.toString(), need: item.value.toString(), desc: desc.value.toString()}).then()
+        }
+
+        navigation.navigate("OrgDashboard", {currentOrg: currentOrg})
+    }
 
     return (
         <>
             <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
+            <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
             <Background>
-                <Logo/>
-                <Header>Your Donation Requests</Header>
-
-                <Text>Donation Offers Accepted</Text>
-
-                {acceptedNeedCards}
-
-                <Text>Donation Offers Still Pending</Text>
-
-                {pendingNeedCards}
-
-                <Text>Donation Offers Declined</Text>
-
-                {declinedNeedCards}
-
                 <Button
                     mode="contained"
 
-                    onPress={() => navigation.navigate('OrgDashboard', {currentOrg: currentOrg})}
+                    onPress={() => navigation.navigate('ViewDonationOffers', {currentOrg: currentOrg})}
                 >
-                    Home
+                    See Offers
+                </Button>
+                <Header>Your Donation Requests</Header>
+                <View>
+                {needCards}
+                <Text>{"\n"}</Text>
+                </View>
+                
+                <Header>Add New Request</Header>
+
+                <TextInput
+                    label="Item"
+                    returnKeyType="next"
+                    value={item.value}
+                    onChangeText={(text) => setItem({ value: text, error: '' })}
+                    error={!!item.error}
+                    errorText={item.error}
+                    width= '50%'
+                />
+                <TextInput
+                    label="Desc"
+                    returnKeyType="done"
+                    value={desc.value}
+                    onChangeText={(text) => setDesc({ value: text, error: '' })}
+                    error={!!desc.error}
+                    errorText={desc.error}
+                />
+                <Button mode="contained" onPress={onAddRequestPressed}>
+                    Add
                 </Button>
             </Background>
+            </ScrollView>
         </>
     )
 }

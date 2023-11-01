@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -92,10 +92,11 @@ export default function OrgRegister({ navigation }) {
                 city: city.value.toString(), street: street.value.toString(), phone: phone.value.toString()
                 }).then()
         }
-        navigation.navigate("StartScreen", {currentOrg: currentOrg})
+        navigation.navigate("OrgLogin", {currentOrg: currentOrg})
     }
 
     return (
+        <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
@@ -177,6 +178,7 @@ export default function OrgRegister({ navigation }) {
                 </TouchableOpacity>
             </View>
         </Background>
+        </ScrollView>
     )
 }
 
