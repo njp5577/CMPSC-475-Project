@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button} from 'react-native';
 import { theme } from '../core/theme'
 import BackButton from './BackButton';
+import Homebutton from './HomeButton';
+import ProfileButton from './ProfileButton';
 
 
 
@@ -17,11 +19,12 @@ class Navbar extends Component {
                     <BackButton goBack={navigation.goBack} />
                 </View>
                 <View style = {{ width: '20%'}}>
-                    <Button title= "Home" style={ styles.navButton } onPress={() => navigation.navigate('Dashboard', {currentUser: currentUser})}></Button>
+                    <Homebutton currentUser={currentUser} navigation={navigation} />
+                    
                 </View>
                 
                 <View style = {{ width: '20%'}}>
-                    <Button title= "Profile" style={ styles.navButton } onPress={() => navigation.navigate('EditProfile', {currentUser: currentUser})}></Button>
+                  <ProfileButton currentUser={currentUser} navigation={navigation} />
                 </View>
             
             
