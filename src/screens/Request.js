@@ -26,12 +26,12 @@ export default function Request({ navigation }) {
         var currentUser = current
     }
 //
-    const [don, setDon] = useState({ value: '', error: '' })
-    const [email, setEmail] = useState({ value: '', error: '' })
-    const [name, setName] = useState({ value: '', error: '' })
+    const [item, setItem] = useState({ value: '', error: '' })
+    const [comment, setComment] = useState({ value: '', error: '' })
+    const [amount, setAmount] = useState({ value: '', error: '' })
 
     const onOrgSearchPressed = () => {
-        const donError = donationValidator(don.value)
+        const amountError = amountValidator(amount.value)
         const emailError = emailValidator(email.value)
         const nameError = nameValidator(name.value)
 

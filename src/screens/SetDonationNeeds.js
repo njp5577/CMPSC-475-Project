@@ -31,6 +31,7 @@ export default function SetDonationNeeds ({navigation}) {
     const [needs, setNeeds] = useState({ value: []})
     const [item, setItem] = useState({ value: '', error: '' })
     const [desc, setDesc] = useState({ value: '', error: '' })
+    const [change, setChange] = useState({ value: 0})
 
     const needRef = firebase.firestore().collection('DonationNeeds')
 
@@ -81,6 +82,10 @@ export default function SetDonationNeeds ({navigation}) {
             setDesc({ value: '', error: '' })
         }
 
+        setChange({ value: (1)})
+
+        console.log("Item added: " + item.value.toString())
+
         //navigation.navigate("OrgDashboard", {currentOrg: currentOrg})
     }
 
@@ -89,16 +94,16 @@ export default function SetDonationNeeds ({navigation}) {
 
             var needList = []
 
+            console.log("Set needs : " + change.value)
+
             try {
                 const docOne = await postingRef.get();
-
-                console.log(docOne.size)
 
                 for(var i = 0; i < docOne.size; i++){
                     needList.push(docOne.docs[i])
                 }
 
-                await setNeeds({value: needList})
+                setNeeds({value: needList})
 
             } catch (err) {
                 console.log(err)
@@ -107,7 +112,7 @@ export default function SetDonationNeeds ({navigation}) {
 
         getInfo().then()
 
-    }, [onAddRequestPressed])
+    }, [change])
 
     return (
         <>

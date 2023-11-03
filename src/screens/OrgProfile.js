@@ -37,6 +37,8 @@ export default function OrgProfile ({navigation}) {
 
             var nameString
 
+            console.log("Profile")
+
             try {
                 const docOne = await accountRef.get();
 
