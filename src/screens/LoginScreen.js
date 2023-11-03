@@ -52,6 +52,9 @@ export default function LoginScreen({ navigation }){
           inList = 1
       }
 
+      
+      
+  
       if (inList == 0) {
           setPassword({...password, error: "Incorrect Login Info"})
           setUsername({...username, error: "Incorrect Login Info"})
@@ -59,6 +62,11 @@ export default function LoginScreen({ navigation }){
       }
 
       currentUser = username.value.toString()
+      
+      if (docOne.docs[0].get("isAdmin")){
+        navigation.navigate("AdminDashboard", {currentUser: currentUser})
+        return
+      }
 
       navigation.navigate("Dashboard", {currentUser: currentUser})
   }

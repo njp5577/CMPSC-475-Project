@@ -22,7 +22,7 @@ const user = {
     name: String,
 }
 
-export default function RegisterScreen({ navigation }) {
+export default function AdminAddAccount({ navigation }) {
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -81,16 +81,16 @@ export default function RegisterScreen({ navigation }) {
           //userList.push(name.value.toString())
 
           usersRef.doc(username.value.toString()).set({username: username.value.toString(), password: password.value.toString(),
-              email: email.value.toString(), name: name.value.toString(), isAdmin: false}).then()
+              email: email.value.toString(), name: name.value.toString(), isAdmin: true}).then()
       }
-      navigation.navigate("LoginScreen", {currentUser: currentUser})
+      navigation.navigate("AdminDashboard", {currentUser: currentUser})
   }
 
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
-      <Header>Register</Header>
+      <Header>Register An Admin Account</Header>
       <TextInput
         label="Name"
         returnKeyType="next"
@@ -135,14 +135,6 @@ export default function RegisterScreen({ navigation }) {
       >
         Next
       </Button>
-      <View style={styles.row}>
-        <Text>Already have an account?</Text>
-      </View>
-      <View style={styles.row}>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}>
-          <Text style={styles.link}>Log in</Text>
-        </TouchableOpacity>
-      </View>
     </Background>
   )
 }
