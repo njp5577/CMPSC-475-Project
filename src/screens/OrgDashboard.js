@@ -41,6 +41,13 @@ export default function OrgDashboard({ navigation }) {
                 <Button
                     mode="contained"
 
+                    onPress={() => navigation.navigate('SetAvailableItems', {currentOrg: currentOrg})}
+                >
+                    Manage Incoming Requests
+                </Button>
+                <Button
+                    mode="contained"
+
                     onPress={() => navigation.navigate('OrgMapPage', {currentOrg: currentOrg})}
                 >
                     Open Map

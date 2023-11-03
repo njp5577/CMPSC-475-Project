@@ -57,6 +57,8 @@ export default function OrgPage({ navigation }) {
 
             var streetString
 
+            var phoneString
+
             try {
                 const docOne = await accountRef.get();
 

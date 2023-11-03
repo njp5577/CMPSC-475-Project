@@ -1,0 +1,181 @@
+import React, { useState, useEffect } from 'react'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
+import { Text } from 'react-native-paper'
+import Background from '../components/Background'
+import Logo from '../components/Logo'
+import Header from '../components/Header'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import BackButton from '../components/BackButton'
+import { theme } from '../core/theme'
+import { useRoute } from '@react-navigation/native'
+import {firebase} from "../firebase/config";
+import Paragraph from '../components/Paragraph'
+import OrgNavbar from "../components/orgNavbar";
+import { itemValidator } from '../helpers/itemValidator'
+import { descriptionValidator } from '../helpers/descriptionValidator'
+
+
+export default function SetAvailableItems ({navigation}) {
+    const route = useRoute()
+
+    const orgCurrent = route.params?.currentOrg || ""
+
+    if (JSON.stringify(orgCurrent) == "\"\"") {
+        var currentOrg = "No Org"
+    } else {
+        var currentOrg = orgCurrent
+    }
+
+    const [email, setEmail] = useState({ value: ''})
+    const [available, setAvailable] = useState({ value: []})
+    const [item, setItem] = useState({ value: '', error: '' })
+    const [desc, setDesc] = useState({ value: '', error: '' })
+    const [change, setChange] = useState({ value: 0})
+
+    const availableRef = firebase.firestore().collection('AvailableItems')
+
+    const postingRef = availableRef.where("email", "==", currentOrg.toString());
+
+    const availableCards = available.value.map((item, pos) =>{
+
+        return (
+            <View className="AvailableCard" key={pos}>
+                <Text>{item.get("item").toString()}</Text>
+                <Text>{item.get("desc").toString()}{"\n"}</Text>
+            </View>
+        )
+    })
+
+    const onAddRequestPressed = async () => {
+        const itemError = itemValidator(item.value)
+        const descError = descriptionValidator(desc.value)
+        let inList = 0
+
+        if (itemError || descError) {
+            setItem({...item, error: itemError})
+            setDesc({...desc, error: descError})
+            return
+        }
+
+        const itemPostingRef = availableRef.where("email", "==", currentOrg.toString()).where("item", "==", item.value.toString());
+
+        const docOne = await itemPostingRef.get();
+        if (docOne.empty) {
+            inList = 0
+        }
+        else{
+            console.log('Item already available!');
+            inList = 1
+        }
+
+        if (inList == 1) {
+            setItem({...item, error: "Item already set as available"})
+            return
+        }
+        else{
+            const docName = item.value.toString() + " : " + currentOrg.toString()
+
+            availableRef.doc(docName).set({email: currentOrg.toString(), item: item.value.toString(), desc: desc.value.toString()}).then()
+
+            setItem({ value: '', error: '' })
+            setDesc({ value: '', error: '' })
+        }
+
+        setChange({ value: (1)})
+
+        console.log("Item added as available: " + item.value.toString())
+
+        //navigation.navigate("OrgDashboard", {currentOrg: currentOrg})
+    }
+
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var availableList = []
+
+            console.log("Set needs : " + change.value)
+
+            try {
+                const docOne = await postingRef.get();
+
+                for(var i = 0; i < docOne.size; i++){
+                    availableList.push(docOne.docs[i])
+                }
+
+                setAvailable({value: availableList})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [change])
+
+    return (
+        <>
+            <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
+            <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
+                <Background>
+                    <Button
+                        mode="contained"
+
+                        onPress={() => navigation.navigate('ViewRequests', {currentOrg: currentOrg})}
+                    >
+                        See Requests
+                    </Button>
+                    <Header>Your Available Items</Header>
+                    <View>
+                        {availableCards}
+                        <Text>{"\n"}</Text>
+                    </View>
+
+                    <Header>Add New Available Item</Header>
+
+                    <TextInput
+                        label="Item"
+                        returnKeyType="next"
+                        value={item.value}
+                        onChangeText={(text) => setItem({ value: text, error: '' })}
+                        error={!!item.error}
+                        errorText={item.error}
+                        width= '50%'
+                    />
+                    <TextInput
+                        label="Desc"
+                        returnKeyType="done"
+                        value={desc.value}
+                        onChangeText={(text) => setDesc({ value: text, error: '' })}
+                        error={!!desc.error}
+                        errorText={desc.error}
+                    />
+                    <Button mode="contained" onPress={onAddRequestPressed}>
+                        Add
+                    </Button>
+                </Background>
+            </ScrollView>
+        </>
+    )
+}
+
+const styles = StyleSheet.create({
+    forgotPassword: {
+        width: '100%',
+        alignItems: 'flex-end',
+        marginBottom: 10,
+    },
+    row: {
+        flexDirection: 'row',
+        marginTop: 4,
+    },
+    forgot: {
+        fontSize: 13,
+        color: theme.colors.secondary,
+    },
+    link: {
+        fontWeight: 'bold',
+        color: theme.colors.primary,
+    },
+})

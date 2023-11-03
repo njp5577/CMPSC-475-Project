@@ -47,6 +47,8 @@ export default function Donate({ navigation }) {
         const commentError = descriptionValidator(comment.value)
         const amountError = descriptionValidator(amount.value)
 
+        var inList = 0
+
         if (itemError || amountError || commentError) {
             setItem({...item, error: itemError})
             setComment({...comment, error: commentError})

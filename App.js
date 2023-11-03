@@ -24,6 +24,8 @@ import {
   SetDonationNeeds,
   ViewDonationOffers,
   OrgResetPassword,
+  SetAvailableItems,
+  ViewRequests,
   AdminDashboard,
   AdminAddAccount,
   AdminDeleteUser,
@@ -59,6 +61,8 @@ export default function App() {
           <Stack.Screen name="SetDonationNeeds" component={SetDonationNeeds} />
           <Stack.Screen name="ViewDonationOffers" component={ViewDonationOffers} />
           <Stack.Screen name="OrgResetPassword" component={OrgResetPassword} />
+          <Stack.Screen name="SetAvailableItems" component={SetAvailableItems} />
+          <Stack.Screen name="ViewRequests" component={ViewRequests} />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
           <Stack.Screen name="AdminDashboard" component={AdminDashboard}/>
           <Stack.Screen name="AdminAddAccount" component={AdminAddAccount}/>

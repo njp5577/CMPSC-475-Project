@@ -8,11 +8,12 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
-import { emailValidator } from '../helpers/emailValidator'
-import { nameValidator } from '../helpers/nameValidator'
 import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
 import Navbar from "../components/navbar";
+import {firebase} from "../firebase/config";
+import { itemValidator } from '../helpers/itemValidator'
+import { descriptionValidator } from '../helpers/descriptionValidator'
 
 export default function Request({ navigation }) {
     const route = useRoute()
@@ -25,74 +26,126 @@ export default function Request({ navigation }) {
     else{
         var currentUser = current
     }
-//
+
+    const orgCurrent = route.params?.currentOrg || ""
+
+    if(JSON.stringify(orgCurrent) == "\"\""){
+        var currentOrg = "No Org"
+    }
+    else{
+        var currentOrg = orgCurrent
+    }
+
+    const availableRef = firebase.firestore().collection('AvailableItems')
+
     const [item, setItem] = useState({ value: '', error: '' })
     const [comment, setComment] = useState({ value: '', error: '' })
     const [amount, setAmount] = useState({ value: '', error: '' })
 
-    const onOrgSearchPressed = () => {
-        const amountError = amountValidator(amount.value)
-        const emailError = emailValidator(email.value)
-        const nameError = nameValidator(name.value)
+    const onRequestPressed = async () => {
+        const itemError = itemValidator(item.value)
+        const commentError = descriptionValidator(comment.value)
+        const amountError = descriptionValidator(amount.value)
 
-        if (donError || emailError || nameError) {
-            setDon({...don, error: donError})
-            setEmail({...email, error: emailError})
-            setName({...name, error: nameError})
+        var inList = 0
+
+        if (itemError || amountError || commentError) {
+            setItem({...item, error: itemError})
+            setComment({...comment, error: commentError})
+            setAmount({...amount, error: amountError})
             return
         }
 
-        navigation.navigate('OrgPage', {currentUser: currentUser})
+        const postingRef = availableRef.where("email", "==", currentOrg.toString()).where("item", "==", item.value.toString());
+
+        const docOne = await postingRef.get();
+
+        if (docOne.empty) {
+            console.log('Organization is not offering this item!');
+            setItem({...item, error: "Organization is not offering this item"})
+            inList = 0
+            return
+        }
+        else{
+            console.log('Item is in list!');
+            inList = 1
+        }
+
+        if (inList == 1) {
+            const userRequestRef = firebase.firestore().collection('DonationRequests')
+            //
+            const userRef = firebase.firestore().collection('Users')
+
+            const currentRef = userRef.where("username", "==", currentUser.toString());
+
+            const docThree = await currentRef.get();
+            //
+            const alreadyRef = userRequestRef.where("userEmail", "==", docThree.docs[0].get("email").toString()).where("need", "==", item.value.toString()).where("orgEmail", "==", currentOrg.toString());
+
+            const docTwo = await alreadyRef.get();
+
+            if (docTwo.empty) {
+
+                const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString()
+
+                userRequestRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
+                    comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString()}).then()
+
+                navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})
+            }
+            else{
+                console.log("You have already put up a request to this organization for this item")
+
+                setItem({...item, error: "You have already put up a request to this organization for this item"})
+
+                return
+            }
+        }
     }
 
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
-        <Background>
-            <Logo />
-            <Header>Donate to this organization!</Header>
-            <TextInput
-                label="Name"
-                returnKeyType="next"
-                value={name.value}
-                onChangeText={(text) => setName({ value: text, error: '' })}
-                error={!!name.error}
-                errorText={name.error}
-            />
-            <TextInput
-                label="Email"
-                returnKeyType="next"
-                value={email.value}
-                onChangeText={(text) => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-            />
-            <TextInput
-                label="Donation"
-                returnKeyType="next"
-                value={don.value}
-                onChangeText={(text) => setDon({ value: text, error: '' })}
-                error={!!don.error}
-                errorText={don.error}
-                autoCapitalize="none"
-                autoCompleteType="don"
-            />
-            <Button mode="contained" onPress={onOrgSearchPressed}>
-                Request donation
-            </Button>
-            <Button
-                mode="contained"
+            <Background>
+                <Logo />
+                <Header>Request Assistance this organization!</Header>
+                <TextInput
+                    label="Item"
+                    returnKeyType="next"
+                    value={item.value}
+                    onChangeText={(text) => setItem({ value: text, error: '' })}
+                    error={!!item.error}
+                    errorText={item.error}
+                    width= '50%'
+                />
+                <TextInput
+                    label="Comment"
+                    returnKeyType="done"
+                    value={comment.value}
+                    onChangeText={(text) => setComment({ value: text, error: '' })}
+                    error={!!comment.error}
+                    errorText={comment.error}
+                />
+                <TextInput
+                    label="Amount"
+                    returnKeyType="done"
+                    value={amount.value}
+                    onChangeText={(text) => setAmount({ value: text, error: '' })}
+                    error={!!amount.error}
+                    errorText={amount.error}
+                />
+                <Button mode="contained" onPress={onRequestPressed}>
+                    Submit Request
+                </Button>
+                <Button
+                    mode="contained"
 
-                onPress={() => navigation.navigate('OrgPage', {currentUser: currentUser})}
-            >
-                Organization Page
-            </Button>
-        </Background>
-            </>
+                    onPress={() => navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})}
+                >
+                    Organization Page
+                </Button>
+            </Background>
+        </>
     )
 }
 
