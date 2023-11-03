@@ -18,9 +18,9 @@ class Navbar extends Component {
                  <View style = {{ width: '20%'}}>
                     <BackButton goBack={navigation.goBack} />
                 </View>
+
                 <View style = {{ width: '20%'}}>
-                    <Homebutton currentUser={currentUser} navigation={navigation} />
-                    
+                  <Homebutton currentUser={currentUser} navigation={navigation} /> 
                 </View>
                 
                 <View style = {{ width: '20%'}}>

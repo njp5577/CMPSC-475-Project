@@ -4,7 +4,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height'
 
 export default function ProfileButton({ currentUser, navigation, destination }) {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {currentUser: currentUser})} style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('OrgProfile', {currentOrg: currentUser})} style={styles.container}>
         <Image
           style={styles.image}
           source={require('../assets/profile.png')}

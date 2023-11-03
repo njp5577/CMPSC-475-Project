@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button} from 'react-native';
 import { theme } from '../core/theme'
 import BackButton from './BackButton';
+import OrgHomebutton from './OrgHomeButton';
+import OrgProfileButton from './OrgProfileButton';
 
 
 
@@ -17,11 +19,11 @@ class OrgNavbar extends Component {
                     <BackButton goBack={navigation.goBack} />
                 </View>
                 <View style = {{ width: '20%'}}>
-                    <Button title= "Home" style={ styles.navButton } onPress={() => navigation.navigate('OrgDashboard', {currentOrg: currentOrg})}></Button>
+                    <OrgHomebutton currentUser={currentOrg} navigation={navigation} destination={'OrgDashboard'} />
                 </View>
 
                 <View style = {{ width: '20%'}}>
-                    <Button title= "Profile" style={ styles.navButton } onPress={() => navigation.navigate('OrgProfile', {currentOrg: currentOrg})}></Button>
+                    <OrgProfileButton currentUser={currentOrg} navigation={navigation} destination={'OrgProfile'}/>
                 </View>
 
 
