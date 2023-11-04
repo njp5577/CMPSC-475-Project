@@ -91,6 +91,20 @@ export default function Dashboard({ navigation }) {
             <Button
                 mode="contained"
 
+                onPress={() => navigation.navigate('SentDonationOffers', {currentUser: currentUser})}
+            >
+                View Donation Offers
+            </Button>
+            <Button
+                mode="contained"
+
+                onPress={() => navigation.navigate('SentDonationRequests', {currentUser: currentUser})}
+            >
+                View Donation Requests
+            </Button>
+            <Button
+                mode="contained"
+
                 onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}
             >
                 Sign Out
