@@ -33,8 +33,6 @@ export default function SentDonationRequests ({navigation}) {
 
     const requestRef = firebase.firestore().collection('DonationRequests')
 
-    const postingRef = requestRef.where("userEmail", "==", currentOrg.toString());
-
     const onCancelPressed = async (sentRequest, sentEmail) => {
 
         const docName = sentEmail + " : " + sentRequest
@@ -66,6 +64,16 @@ export default function SentDonationRequests ({navigation}) {
 
             var RequestList = []
 
+            const usersRef = firebase.firestore().collection('Users')
+
+            const accountRef = usersRef.where("username", "==", currentUser.toString());
+
+            const docTwo = await accountRef.get();
+
+            emailString = await (docTwo.docs[0].get("email")).toString()
+
+            const postingRef = requestRef.where("userEmail", "==", emailString);
+
             try {
                 const docOne = await postingRef.get();
 
@@ -90,12 +98,14 @@ export default function SentDonationRequests ({navigation}) {
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+            <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
             <Background>
 
                 <Header>Your Donation Requests</Header>
 
                 <View>{RequestCards}</View>
             </Background>
+            </ScrollView>
         </>
     )
 }

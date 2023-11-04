@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -64,6 +64,7 @@ export default function OrgLogin({ navigation }){
     }
 
     return (
+        
         <Background>
             <BackButton goBack={navigation.goBack} />
             <Logo />
@@ -104,6 +105,7 @@ export default function OrgLogin({ navigation }){
                 </TouchableOpacity>
             </View>
         </Background>
+        
     )
 }
 

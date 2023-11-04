@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Background from '../components/Background'
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import BackButton from '../components/BackButton'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -60,6 +61,7 @@ export default function OrgResetPassword({ navigation }) {
   }
 
   return (
+    
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
@@ -103,5 +105,6 @@ export default function OrgResetPassword({ navigation }) {
         Continue
       </Button>
     </Background>
+    
   )
 }

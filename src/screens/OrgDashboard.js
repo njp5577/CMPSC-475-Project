@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -27,6 +27,7 @@ export default function OrgDashboard({ navigation }) {
     return (
         <>
             <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
+            
             <Background>
                 <Logo />
                 <Header>Welcome {currentOrg}!</Header>
@@ -60,6 +61,7 @@ export default function OrgDashboard({ navigation }) {
                     Sign Out
                 </Button>
             </Background>
+            
         </>
     )
 }

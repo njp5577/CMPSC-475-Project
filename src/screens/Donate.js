@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -106,6 +106,7 @@ export default function Donate({ navigation }) {
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+            
         <Background>
             <Logo />
             <Header>Donate to this organization!</Header>
@@ -145,6 +146,7 @@ export default function Donate({ navigation }) {
                 Organization Page
             </Button>
         </Background>
+    
         </>
     )
 }

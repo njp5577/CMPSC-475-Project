@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -97,6 +97,7 @@ export default function OrgPage({ navigation }) {
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+            
         <Background>
             <Logo />
             <Header>{name.value}</Header>
@@ -121,6 +122,7 @@ export default function OrgPage({ navigation }) {
                 Request Assistance
             </Button>
         </Background>
+        
         </>
     )
 }

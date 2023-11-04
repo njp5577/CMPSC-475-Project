@@ -9,11 +9,12 @@ import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { useRoute } from '@react-navigation/native'
-import {firebase} from "../firebase/config";
+import {db, firebase} from "../firebase/config";
 import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
 import { itemValidator } from '../helpers/itemValidator'
 import { descriptionValidator } from '../helpers/descriptionValidator'
+import {deleteDoc, doc} from "firebase/firestore";
 
 
 export default function SetAvailableItems ({navigation}) {
@@ -37,12 +38,25 @@ export default function SetAvailableItems ({navigation}) {
 
     const postingRef = availableRef.where("email", "==", currentOrg.toString());
 
+    const onDeletePressed = async (sentItem) => {
+
+        const docName = sentItem + " : " + currentOrg.toString()
+
+        console.log(docName + " Deleted")
+
+        await deleteDoc(doc(db, "AvailableItems", docName));
+        setChange({ value: (1)})
+    }
+
     const availableCards = available.value.map((item, pos) =>{
 
         return (
             <View className="AvailableCard" key={pos}>
                 <Text>{item.get("item").toString()}</Text>
                 <Text>{item.get("desc").toString()}{"\n"}</Text>
+                <Button mode="contained" onPress={() => onDeletePressed(item.get("item").toString())}>
+                Delete
+                </Button>
             </View>
         )
     })

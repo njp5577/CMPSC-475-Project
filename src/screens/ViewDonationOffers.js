@@ -60,7 +60,7 @@ export default function ViewDonationOffers ({navigation}) {
 
         console.log(docName)
 
-        await needRef.doc(docName).set({status: "decline"}, {merge: true})
+        await needRef.doc(docName).set({status: "declined"}, {merge: true})
         setChange({ value: (1)})
     }
 

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
+import BackButton from '../components/BackButton'
 
 import { theme } from '../core/theme'
 
@@ -28,8 +29,9 @@ export default function AdminDashboard ({ navigation }) {
 
     return (
         <>
+        
         <Background> 
-            
+            <BackButton goBack={navigation.goBack} />
             
             <Logo />
             <Header>Welcome {currentUser}!</Header>
@@ -55,6 +57,7 @@ export default function AdminDashboard ({ navigation }) {
                 Sign Out
             </Button>
         </Background>
+        
         </>
     )
 }

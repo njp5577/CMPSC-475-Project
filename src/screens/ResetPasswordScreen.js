@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Background from '../components/Background'
 import BackButton from '../components/BackButton'
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import TextInput from '../components/TextInput'
@@ -68,6 +69,7 @@ export default function ResetPasswordScreen({ navigation }) {
   }
 
   return (
+    
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
@@ -111,5 +113,6 @@ export default function ResetPasswordScreen({ navigation }) {
         Continue
       </Button>
     </Background>
+    
   )
 }
