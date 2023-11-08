@@ -31,9 +31,20 @@ export default function AdminDeleteOrg({ navigation }) {
     const [org, setOrg] = useState({ value: '', error: '' })
 
     const deleteOrg = async () => {
-        
-        
-        await deleteDoc(doc(db, "Orgs", org.value.toString()));
+
+        const orgsRef = firebase.firestore().collection('Orgs')
+        const accountRef = orgsRef.where("name", "==", org.value.toString());
+        const docOne = await accountRef.get();
+
+        if (docOne.empty) {
+            console.log('Org does not exist!');
+        }
+        else{
+            for(var i = 0; i < docOne.size; i++){
+                await docOne.docs[i].ref.delete()
+            }
+        }
+        //await deleteDoc(doc(db, "Orgs", org.value.toString()));
 
     }
 

@@ -47,7 +47,7 @@ export default function AdminDashboard ({ navigation }) {
 
                 onPress={() => navigation.navigate('AdminDeleteOrg', {currentUser: currentUser})}
             >
-                Delete Organiztion Accounts
+                Delete Organization Accounts
             </Button>
             <Button
                 mode="contained"

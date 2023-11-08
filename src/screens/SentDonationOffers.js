@@ -70,7 +70,7 @@ export default function SentDonationOffers ({navigation}) {
 
             const docTwo = await accountRef.get();
 
-            emailString = await (docTwo.docs[0].get("email")).toString()
+            var emailString = await (docTwo.docs[0].get("email")).toString()
 
             const postingRef = offerRef.where("userEmail", "==", emailString);
 

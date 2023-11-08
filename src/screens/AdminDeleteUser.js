@@ -31,8 +31,19 @@ export default function AdminDeleteUser({ navigation }) {
     const [username, setUsername] = useState({ value: '', error: '' })
 
     const deleteUser = async () => {
-        
-        await deleteDoc(doc(db, "Users", username.value.toString()));
+        const usersRef = firebase.firestore().collection('Users')
+        const accountRef = usersRef.where("username", "==", username.value.toString());
+        const docOne = await accountRef.get();
+
+        if (docOne.empty) {
+            console.log('User does not exist!');
+        }
+        else{
+            for(var i = 0; i < docOne.size; i++){
+                await docOne.docs[i].ref.delete()
+            }
+        }
+        //await deleteDoc(doc(db, "Users", username.value.toString()));
 
     }
 
