@@ -46,13 +46,13 @@ export default function SentDonationOffers ({navigation}) {
     const OfferCards = offers.value.map((item, pos) =>{
 
         return (
-            <View className="OfferCard" key={pos}>
-                <Text>Item: {item.get("need").toString()}</Text>
-                <Text>Amount: {item.get("amount").toString()}</Text>
-                <Text>Email: {item.get("orgEmail").toString()}</Text>
-                <Text>Comment: {item.get("comment").toString()}{"\n"}</Text>
-                <Text>Status: {item.get("status").toString()}{"\n"}</Text>
-                <Button mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+            <View style={styles.NeedCard} className="OfferCard" key={pos}>
+                <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
+                <Text style={styles.item}>Amount: {item.get("amount").toString()}</Text>
+                <Text style={styles.item}>Email: {item.get("orgEmail").toString()}</Text>
+                <Text style={styles.item}>Comment: {item.get("comment").toString()}{"\n"}</Text>
+                <Text style={styles.item}>Status: {item.get("status").toString()}{"\n"}</Text>
+                <Button style={[styles.button]} mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
                     Cancel Offer
                 </Button>
             </View>
@@ -127,5 +127,27 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    item: {
+        marginTop: 5,
+        marginLeft: 30,
+        marginRight: 30,
+    },
+    NeedCard: {
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 20,
+    },
+    button: {
+        width: 'fit-content',
+        
     },
 })

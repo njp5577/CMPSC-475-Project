@@ -51,10 +51,10 @@ export default function SetAvailableItems ({navigation}) {
     const availableCards = available.value.map((item, pos) =>{
 
         return (
-            <View className="AvailableCard" key={pos}>
-                <Text>{item.get("item").toString()}</Text>
-                <Text>{item.get("desc").toString()}{"\n"}</Text>
-                <Button mode="contained" onPress={() => onDeletePressed(item.get("item").toString())}>
+            <View className="AvailableCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Item: {item.get("item").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("desc").toString()}{"\n"}</Text>
+                <Button style={[styles.item,styles.button]} mode="contained" onPress={() => onDeletePressed(item.get("item").toString())}>
                 Delete
                 </Button>
             </View>
@@ -141,10 +141,10 @@ export default function SetAvailableItems ({navigation}) {
                         See Requests
                     </Button>
                     <Header>Your Available Items</Header>
-                    <View>
-                        {availableCards}
-                        <Text>{"\n"}</Text>
-                    </View>
+                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                    {availableCards}
+                    </ScrollView>
+                   
 
                     <Header>Add New Available Item</Header>
 
@@ -191,5 +191,27 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    item: {
+        marginTop: 10,
+        marginLeft: 30,
+        marginRight: 30,
+    },
+    NeedCard: {
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 20,
+    },
+    button: {
+        width: 'fit-content',
+        
     },
 })

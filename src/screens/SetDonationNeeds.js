@@ -9,15 +9,15 @@ import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { useRoute } from '@react-navigation/native'
-import {db, firebase} from "../firebase/config";
+import { db, firebase } from "../firebase/config";
 import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
 import { itemValidator } from '../helpers/itemValidator'
 import { descriptionValidator } from '../helpers/descriptionValidator'
-import {deleteDoc, doc} from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 
 
-export default function SetDonationNeeds ({navigation}) {
+export default function SetDonationNeeds({ navigation }) {
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -28,11 +28,11 @@ export default function SetDonationNeeds ({navigation}) {
         var currentOrg = orgCurrent
     }
 
-    const [email, setEmail] = useState({ value: ''})
-    const [needs, setNeeds] = useState({ value: []})
+    const [email, setEmail] = useState({ value: '' })
+    const [needs, setNeeds] = useState({ value: [] })
     const [item, setItem] = useState({ value: '', error: '' })
     const [desc, setDesc] = useState({ value: '', error: '' })
-    const [change, setChange] = useState({ value: 0})
+    const [change, setChange] = useState({ value: 0 })
 
     const needRef = firebase.firestore().collection('DonationNeeds')
 
@@ -45,17 +45,17 @@ export default function SetDonationNeeds ({navigation}) {
         console.log(docName + " Deleted")
 
         await deleteDoc(doc(db, "DonationNeeds", docName));
-        setChange({ value: (1)})
+        setChange({ value: (1) })
     }
 
-    const needCards = needs.value.map((item, pos) =>{
+    const needCards = needs.value.map((item, pos) => {
 
         return (
-            <View className="NeedCard" key={pos}>
-                <Text>{item.get("need").toString()}</Text>
-                <Text>{item.get("desc").toString()}{"\n"}</Text>
-                <Button mode="contained" onPress={() => onDeletePressed(item.get("need").toString())}>
-                Delete
+            <View className="NeedCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("desc").toString()}</Text>
+                <Button style={[styles.item,styles.button]} mode="contained" onPress={() => onDeletePressed(item.get("need").toString())}>
+                    Delete
                 </Button>
             </View>
         )
@@ -67,36 +67,36 @@ export default function SetDonationNeeds ({navigation}) {
         let inList = 0
 
         if (itemError || descError) {
-            setItem({...item, error: itemError})
-            setDesc({...desc, error: descError})
+            setItem({ ...item, error: itemError })
+            setDesc({ ...desc, error: descError })
             return
         }
-        
+
         const itemPostingRef = needRef.where("email", "==", currentOrg.toString()).where("need", "==", item.value.toString());
 
         const docOne = await itemPostingRef.get();
         if (docOne.empty) {
             inList = 0
         }
-        else{
+        else {
             console.log('Item already requested!');
             inList = 1
         }
 
         if (inList == 1) {
-            setItem({...item, error: "Item already requested"})
+            setItem({ ...item, error: "Item already requested" })
             return
         }
-        else{
+        else {
             const docName = item.value.toString() + " : " + currentOrg.toString()
 
-            needRef.doc(docName).set({email: currentOrg.toString(), need: item.value.toString(), desc: desc.value.toString()}).then()
+            needRef.doc(docName).set({ email: currentOrg.toString(), need: item.value.toString(), desc: desc.value.toString() }).then()
 
             setItem({ value: '', error: '' })
             setDesc({ value: '', error: '' })
         }
 
-        setChange({ value: (1)})
+        setChange({ value: (1) })
 
         console.log("Item added: " + item.value.toString())
 
@@ -113,11 +113,11 @@ export default function SetDonationNeeds ({navigation}) {
             try {
                 const docOne = await postingRef.get();
 
-                for(var i = 0; i < docOne.size; i++){
+                for (var i = 0; i < docOne.size; i++) {
                     needList.push(docOne.docs[i])
                 }
 
-                setNeeds({value: needList})
+                setNeeds({ value: needList })
 
             } catch (err) {
                 console.log(err)
@@ -130,45 +130,45 @@ export default function SetDonationNeeds ({navigation}) {
 
     return (
         <>
-            <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
+            <OrgNavbar title="My App" navigation={navigation} currentOrg={currentOrg}></OrgNavbar>
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
-            <Background>
-                <Button
-                    mode="contained"
+                <Background>
+                    <Button
+                        mode="contained"
 
-                    onPress={() => navigation.navigate('ViewDonationOffers', {currentOrg: currentOrg})}
-                >
-                    See Offers
-                </Button>
-                <Header>Your Donation Requests</Header>
-                <View>
-                {needCards}
-                <Text>{"\n"}</Text>
-                </View>
-                
-                <Header>Add New Request</Header>
+                        onPress={() => navigation.navigate('ViewDonationOffers', { currentOrg: currentOrg })}
+                    >
+                        See Offers
+                    </Button>
+                    <Header>Your Donation Requests</Header>
+                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                        {needCards}
+                    </ScrollView>
+                    
 
-                <TextInput
-                    label="Item"
-                    returnKeyType="next"
-                    value={item.value}
-                    onChangeText={(text) => setItem({ value: text, error: '' })}
-                    error={!!item.error}
-                    errorText={item.error}
-                    width= '50%'
-                />
-                <TextInput
-                    label="Desc"
-                    returnKeyType="done"
-                    value={desc.value}
-                    onChangeText={(text) => setDesc({ value: text, error: '' })}
-                    error={!!desc.error}
-                    errorText={desc.error}
-                />
-                <Button mode="contained" onPress={onAddRequestPressed}>
-                    Add
-                </Button>
-            </Background>
+                    <Header>Add New Request</Header>
+
+                    <TextInput
+                        label="Item"
+                        returnKeyType="next"
+                        value={item.value}
+                        onChangeText={(text) => setItem({ value: text, error: '' })}
+                        error={!!item.error}
+                        errorText={item.error}
+                        width='50%'
+                    />
+                    <TextInput
+                        label="Desc"
+                        returnKeyType="done"
+                        value={desc.value}
+                        onChangeText={(text) => setDesc({ value: text, error: '' })}
+                        error={!!desc.error}
+                        errorText={desc.error}
+                    />
+                    <Button mode="contained" onPress={onAddRequestPressed}>
+                        Add
+                    </Button>
+                </Background>
             </ScrollView>
         </>
     )
@@ -191,5 +191,27 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    NeedCard: {
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 20,
+    },
+    item: {
+        marginTop: 10,
+        marginLeft: 30,
+        marginRight: 30,
+    },
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    button: {
+        width: 'fit-content',
+        
     },
 })
