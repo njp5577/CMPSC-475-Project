@@ -86,7 +86,7 @@ export default function Request({ navigation }) {
 
             if (docTwo.empty) {
 
-                const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString()
+                const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString() + " : " + currentOrg.toString()
 
                 userRequestRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
                     comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString()}).then()
