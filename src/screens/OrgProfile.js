@@ -26,6 +26,10 @@ export default function OrgProfile ({navigation}) {
 
     const [email, setEmail] = useState({ value: ''})
     const [name, setName] = useState({ value: ''})
+    const [city, setCity] = useState({ value: ''})
+    const [phone, setPhone] = useState({ value: ''})
+    const [state, setState] = useState({ value: ''})
+    const [street, setStreet] = useState({ value: ''})
 
     const orgRef = firebase.firestore().collection('Orgs')
 
@@ -36,6 +40,7 @@ export default function OrgProfile ({navigation}) {
             var emailString
 
             var nameString
+            var inputString
 
             console.log("Profile")
 
@@ -44,11 +49,27 @@ export default function OrgProfile ({navigation}) {
 
                 nameString = await (docOne.docs[0].get("name")).toString()
 
-                await setName({value: nameString})
+                setName({value: nameString})
 
                 emailString = await (docOne.docs[0].get("email")).toString()
 
-                await setEmail({value: emailString})
+                setEmail({value: emailString})
+
+                inputString = await (docOne.docs[0].get("city")).toString()
+
+                setCity({value: inputString})
+
+                inputString = await (docOne.docs[0].get("phone")).toString()
+
+                setPhone({value: inputString})
+
+                inputString = await (docOne.docs[0].get("state")).toString()
+
+                setState({value: inputString})
+
+                inputString = await (docOne.docs[0].get("street")).toString()
+
+                setStreet({value: inputString})
 
             } catch (err) {
                 console.log(err)
@@ -64,11 +85,15 @@ export default function OrgProfile ({navigation}) {
             
             <Background>
                 <Logo/>
-                <Header>Organization Profile</Header>
+                <Header style={styles.text}>{name.value}</Header>
 
-                <Text>Name: {name.value}</Text>
+                
 
-                <Text>Email: {email.value}</Text>
+                <Text style={[styles.text,styles.subText]}>Email: {email.value}</Text>
+
+                <Text style={[styles.text,styles.subText]}>Address: {street.value}, {city.value}, {state.value}</Text>
+
+                <Text style={[styles.text,styles.subText]}>Phone: {phone.value}</Text>
 
                 <Button
                     mode="contained"
@@ -101,4 +126,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
+    text: {
+        fontSize: 30,
+        color: theme.colors.secondary,
+        marginTop: 10,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    subText: {
+        fontSize:15,
+    }
 })

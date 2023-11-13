@@ -62,13 +62,13 @@ export default function EditProfile ({navigation}) {
         <Background>
             
             <Logo/>
-            <Header>Your Profile</Header>
+            <Header style={styles.text}>{name.value}</Header>
 
-            <Text>Name: {name.value}</Text>
+            <Text style={[styles.text,styles.subText]}>Name: {name.value}</Text>
 
-            <Text>Username: {currentUser}</Text>
+            <Text style={[styles.text,styles.subText]}>Username: {currentUser}</Text>
 
-            <Text>Email: {email.value}</Text>
+            <Text style={[styles.text,styles.subText]}>Email: {email.value}</Text>
 
             <Button
                 mode="contained"
@@ -101,4 +101,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
+    text: {
+        fontSize: 30,
+        color: theme.colors.secondary,
+        marginTop: 10,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    subText: {
+        fontSize:15,
+    }
+    
 })
