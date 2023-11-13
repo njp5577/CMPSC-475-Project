@@ -39,7 +39,40 @@ export default function AdminDeleteUser({ navigation }) {
             console.log('User does not exist!');
         }
         else{
+
+            const offerRef = firebase.firestore().collection('DonationOffers')
+
+            const reqRef = firebase.firestore().collection('DonationRequests')
+
             for(var i = 0; i < docOne.size; i++){
+                var email = (await docOne.docs[i].get("email")).toString();
+
+                const offersRef = offerRef.where("userEmail", "==", email);
+
+                const docTwo = await offersRef.get();
+
+                if(docTwo.empty){
+                    console.log('User has no donation offers')
+                }
+                else{
+                    for(var j = 0; j < docTwo.size; j++){
+                        await docTwo.docs[j].ref.delete()
+                    }
+                }
+
+                const reqsRef = reqRef.where("userEmail", "==", email);
+
+                const docThree = await reqsRef.get();
+
+                if(docThree.empty){
+                    console.log('User has no donation requests')
+                }
+                else{
+                    for(var k = 0; k < docThree.size; k++){
+                        await docThree.docs[k].ref.delete()
+                    }
+                }
+
                 await docOne.docs[i].ref.delete()
             }
         }

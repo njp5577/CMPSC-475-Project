@@ -40,7 +40,69 @@ export default function AdminDeleteOrg({ navigation }) {
             console.log('Org does not exist!');
         }
         else{
+            const offerRef = firebase.firestore().collection('DonationOffers')
+
+            const reqRef = firebase.firestore().collection('DonationRequests')
+
+            const availRef = firebase.firestore().collection('AvailableItems')
+
+            const needsRef = firebase.firestore().collection('DonationNeeds')
+
             for(var i = 0; i < docOne.size; i++){
+                var email = (await docOne.docs[i].get("email")).toString();
+
+                const offersRef = offerRef.where("orgEmail", "==", email);
+
+                const docTwo = await offersRef.get();
+
+                if(docTwo.empty){
+                    console.log('Org has no donation offers')
+                }
+                else{
+                    for(var j = 0; j < docTwo.size; j++){
+                        await docTwo.docs[j].ref.delete()
+                    }
+                }
+
+                const reqsRef = reqRef.where("orgEmail", "==", email);
+
+                const docThree = await reqsRef.get();
+
+                if(docThree.empty){
+                    console.log('Org has no donation requests')
+                }
+                else{
+                    for(var k = 0; k < docThree.size; k++){
+                        await docThree.docs[k].ref.delete()
+                    }
+                }
+
+                const availableRef = availRef.where("email", "==", email);
+
+                const docFour = await availableRef.get();
+
+                if(docFour.empty){
+                    console.log('Org has no available items')
+                }
+                else{
+                    for(var m = 0; m < docFour.size; m ++){
+                        await docFour.docs[m].ref.delete()
+                    }
+                }
+
+                const needRef = needsRef.where("email", "==", email);
+
+                const docFive = await needRef.get();
+
+                if(docFive.empty){
+                    console.log('Org has no donation needs')
+                }
+                else{
+                    for(var n = 0; n < docFive.size; n++){
+                        await docFive.docs[n].ref.delete()
+                    }
+                }
+
                 await docOne.docs[i].ref.delete()
             }
         }

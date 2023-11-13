@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -11,6 +11,7 @@ import { theme } from '../core/theme'
 import { organizationValidator } from '../helpers/organizationValidator'
 import { useRoute } from '@react-navigation/native'
 import OrgNavbar from "../components/orgNavbar";
+import {firebase} from "../firebase/config";
 
 export default function OrgDashboard({ navigation }) {
     const route = useRoute()
@@ -24,13 +25,39 @@ export default function OrgDashboard({ navigation }) {
         var currentOrg = orgCurrent
     }
 
+    const [name, setName] = useState({ value: ''})
+
+    const orgsRef = firebase.firestore().collection('Orgs')
+
+    const accountRef = orgsRef.where("email", "==", currentOrg.toString());
+
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var nameString
+
+            try {
+                const docOne = await accountRef.get();
+
+                nameString = await (docOne.docs[0].get("name")).toString()
+
+                await setName({value: nameString})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+    }, [])
+
     return (
         <>
             <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
             
             <Background>
                 <Logo />
-                <Header>Welcome {currentOrg}!</Header>
+                <Header>Welcome {name.value.toString()}!</Header>
 
                 <Button
                     mode="contained"
