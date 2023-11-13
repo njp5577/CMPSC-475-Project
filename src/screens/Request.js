@@ -109,7 +109,7 @@ export default function Request({ navigation }) {
             
             <Background>
                 <Logo />
-                <Header>Request Assistance this organization!</Header>
+                <Header>Request assistance this organization!</Header>
                 <TextInput
                     label="Item"
                     returnKeyType="next"

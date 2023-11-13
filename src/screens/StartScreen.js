@@ -40,25 +40,13 @@ export default function StartScreen({ navigation }) {
 
         onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}
       >
-        Log in
-      </Button>
-      <Button
-        mode="outlined"
-        onPress={() => navigation.navigate('RegisterScreen', {currentUser: currentUser})}
-      >
-        Create an account
+        User Login
       </Button>
         <Button
             mode="contained"
             onPress={() => navigation.navigate('OrgLogin', {currentOrg: currentOrg})}
         >
             Organization Login
-        </Button>
-        <Button
-            mode="outlined"
-            onPress={() => navigation.navigate('OrgRegister', {currentOrg: currentOrg})}
-        >
-            Register Organization
         </Button>
     </Background>
   )

@@ -72,8 +72,8 @@ export default function LoginScreen({ navigation }){
   }
 
   return (
-    <Background>
-      <BackButton goBack={navigation.goBack} />
+    <Background>    
+      <BackButton goBack={navigation.goBack}/>
       <Logo />
       <Header>Login</Header>
       <TextInput

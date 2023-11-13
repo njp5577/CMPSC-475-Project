@@ -20,7 +20,7 @@ export default function Button({ mode, style, ...props }) {
 
 const styles = StyleSheet.create({
   button: {
-    width: '80%',
+    width: '50%',
     marginVertical: 5,
     paddingVertical: 0,
   },

@@ -53,10 +53,12 @@ export default function SetAvailableItems ({navigation}) {
         return (
             <View className="AvailableCard" style={styles.NeedCard} key={pos}>
                 <Text style={styles.item}>Item: {item.get("item").toString()}</Text>
-                <Text style={styles.item}>Quantity: {item.get("desc").toString()}{"\n"}</Text>
+                <Text style={styles.item}>Description: {item.get("desc").toString()}</Text>
+                
                 <Button style={[styles.item,styles.button]} mode="contained" onPress={() => onDeletePressed(item.get("item").toString())}>
                 Delete
                 </Button>
+                
             </View>
         )
     })
@@ -133,20 +135,11 @@ export default function SetAvailableItems ({navigation}) {
             <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
                 <Background>
-                    <Button
-                        mode="contained"
-
-                        onPress={() => navigation.navigate('ViewRequests', {currentOrg: currentOrg})}
-                    >
-                        See Requests
-                    </Button>
-                    <Header>Your Available Items</Header>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
-                    {availableCards}
-                    </ScrollView>
-                   
-
                     <Header>Add New Available Item</Header>
+
+                    <Button mode="contained" onPress={onAddRequestPressed}>
+                        Add
+                    </Button>
 
                     <TextInput
                         label="Item"
@@ -165,9 +158,23 @@ export default function SetAvailableItems ({navigation}) {
                         error={!!desc.error}
                         errorText={desc.error}
                     />
-                    <Button mode="contained" onPress={onAddRequestPressed}>
-                        Add
+                
+                    <Header>Your Available Items</Header>
+                    
+                    <View height='35%'>
+                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                    {availableCards}
+                    </ScrollView>
+                    </View>
+
+                    <Button
+                        mode="contained"
+
+                        onPress={() => navigation.navigate('ViewRequests', {currentOrg: currentOrg})}
+                    >
+                        See Requests
                     </Button>
+
                 </Background>
             </ScrollView>
         </>
@@ -198,20 +205,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     item: {
-        marginTop: 10,
-        marginLeft: 30,
-        marginRight: 30,
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
     },
     NeedCard: {
+        flex: 1,
         borderRadius: 25,
         borderWidth: 2,
-        alignItems: 'center',
+        alignItems: 'left',
         flexDirection: 'column',
         marginBottom: 10,
-        marginLeft: 20,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
     button: {
         width: 'fit-content',
-        
     },
 })

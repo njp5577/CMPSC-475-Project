@@ -69,12 +69,12 @@ export default function ViewRequests({ navigation }) {
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
-                <Text style={styles.item}>Amount: {item.get("amount").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
-                <Text style={styles.item}>Comment: {item.get("comment").toString()}{"\n"}</Text>
-                <View flexDirection="row" justifyContent="space-between">
+                <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
+                <View flexDirection="row" justifyContent="center">
                     <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
-                        Back to Pending
+                        Pend
                     </Button>
                     <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
                         Decline
@@ -90,10 +90,10 @@ export default function ViewRequests({ navigation }) {
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
-                <Text style={styles.item}>Amount: {item.get("amount").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
-                <Text style={styles.item}>Comment: {item.get("comment").toString()}{"\n"}</Text>
-                <View flexDirection="row" justifyContent="space-between">
+                <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
+                <View flexDirection="row" justifyContent="center">
                     <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
                         Accept
                     </Button>
@@ -108,17 +108,17 @@ export default function ViewRequests({ navigation }) {
     const declinedNeedCards = declinedNeeds.value.map((item, pos) => {
 
         return (
-            <View className="NeedCard" key={pos}>
+            <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
-                <Text style={styles.item}>Amount: {item.get("amount").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
-                <Text style={styles.item}>Comment: {item.get("comment").toString()}{"\n"}</Text>
-                <View flexDirection="row" justifyContent="space-between">
+                <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
+                <View flexDirection="row" justifyContent="center">
                     <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
                         Accept
                     </Button>
                     <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
-                        Back to Pending
+                        Pend
                     </Button>
                 </View>
             </View>
@@ -168,26 +168,26 @@ export default function ViewRequests({ navigation }) {
             <OrgNavbar title="My App" navigation={navigation} currentOrg={currentOrg}></OrgNavbar>
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
                 <Background>
-                    <Logo />
-                    <Header>Donation Requests From Users</Header>
-
                     <Header>Donation Requests Accepted</Header>
+                    <View height='25%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {acceptedNeedCards}
                     </ScrollView>
-
+                    </View>
 
                     <Header>Donation Requests Pending</Header>
+                    <View height='25%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {pendingNeedCards}
                     </ScrollView>
-
+                    </View>
 
                     <Header>Donation Requests Declined</Header>
+                    <View height='25%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {declinedNeedCards}
                     </ScrollView>
-
+                    </View>
 
                 </Background>
             </ScrollView>
@@ -213,26 +213,27 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
-    NeedCard: {
-        borderRadius: 25,
-        borderWidth: 2,
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'column',
-        marginBottom: 10,
-        marginLeft: 20,
     },
     item: {
         marginTop: 5,
         marginLeft: 20,
         marginRight: 20,
     },
-    scrollview: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+    NeedCard: {
+        flex: 1,
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
     button: {
         width: 'fit-content',
-
     },
 })

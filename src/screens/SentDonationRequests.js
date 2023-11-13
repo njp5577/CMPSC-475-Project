@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
-import Button from '../components/Button'
+import SmallButton from '../components/SmallButton'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
@@ -47,15 +47,19 @@ export default function SentDonationRequests ({navigation}) {
 
         return (
             <View style={styles.NeedCard} className="RequestCard" key={pos}>
+                <View>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
-                <Text style={styles.item}>Amount: {item.get("amount").toString()}</Text>
-                <Text style={styles.item}>Organization Email:</Text>
+                <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
+                <Text style={styles.item}>Org Email: {item.get("orgEmail").toString()}</Text>
                 <Text style={styles.item}>{item.get("orgEmail").toString()}</Text>
-                <Text style={styles.item}>Comment: {item.get("comment").toString()}{"\n"}</Text>
-                <Text style={styles.item}>Status: {item.get("status").toString()}{"\n"}</Text>
-                <Button style={[styles.button]} mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
-                    Cancel Request
-                </Button>
+                <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
+                </View>
+                <View flexDirection='row' width='90%'>
+                <Text style={styles.item} paddingTop='2%'>Status: {item.get("status").toString()}</Text>
+                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    Cancel
+                </SmallButton>
+                </View>
             </View>
         )
     })
@@ -102,7 +106,7 @@ export default function SentDonationRequests ({navigation}) {
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
             <Background>
 
-                <Header>Your Donation Requests</Header>
+                <Header>Your Donation Requests{"\n"}</Header>
                 
                 <View>{RequestCards}</View>
             </Background>
@@ -136,16 +140,18 @@ const styles = StyleSheet.create({
     },
     item: {
         marginTop: 5,
-        marginLeft: 30,
-        marginRight: 30,
+        marginLeft: 12,
+        marginRight: 20,
     },
     NeedCard: {
+        width: '70%',
         borderRadius: 25,
         borderWidth: 2,
-        alignItems: 'center',
+        alignItems: 'left',
         flexDirection: 'column',
         marginBottom: 10,
-        marginLeft: 20,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
     button: {
         width: 'fit-content',

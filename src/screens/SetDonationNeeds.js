@@ -133,19 +133,6 @@ export default function SetDonationNeeds({ navigation }) {
             <OrgNavbar title="My App" navigation={navigation} currentOrg={currentOrg}></OrgNavbar>
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
                 <Background>
-                    <Button
-                        mode="contained"
-
-                        onPress={() => navigation.navigate('ViewDonationOffers', { currentOrg: currentOrg })}
-                    >
-                        See Offers
-                    </Button>
-                    <Header>Your Donation Requests</Header>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
-                        {needCards}
-                    </ScrollView>
-                    
-
                     <Header>Add New Request</Header>
 
                     <TextInput
@@ -167,6 +154,20 @@ export default function SetDonationNeeds({ navigation }) {
                     />
                     <Button mode="contained" onPress={onAddRequestPressed}>
                         Add
+                    </Button>
+                    <Header>Your Donation Requests</Header>
+
+                    <View height='35%'>
+                    <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                        {needCards}
+                    </ScrollView>
+                    </View>
+                    <Button
+                        mode="contained"
+
+                        onPress={() => navigation.navigate('ViewDonationOffers', { currentOrg: currentOrg })}
+                    >
+                        See Offers
                     </Button>
                 </Background>
             </ScrollView>
@@ -192,26 +193,27 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
-    NeedCard: {
-        borderRadius: 25,
-        borderWidth: 2,
-        alignItems: 'center',
-        flexDirection: 'column',
-        marginBottom: 10,
-        marginLeft: 20,
-    },
-    item: {
-        marginTop: 10,
-        marginLeft: 30,
-        marginRight: 30,
-    },
     scrollview: {
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
+    item: {
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    NeedCard: {
+        flex: 1,
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
+    },
     button: {
         width: 'fit-content',
-        
     },
 })
