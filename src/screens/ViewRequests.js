@@ -60,7 +60,7 @@ export default function ViewRequests({ navigation }) {
 
         console.log(docName)
 
-        await requestRef.doc(docName).set({ status: "decline" }, { merge: true })
+        await requestRef.doc(docName).set({ status: "declined" }, { merge: true })
         setChange({ value: (1) })
     }
 

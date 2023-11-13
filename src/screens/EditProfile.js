@@ -70,6 +70,13 @@ export default function EditProfile ({navigation}) {
 
             <Text style={[styles.text,styles.subText]}>Email: {email.value}</Text>
 
+            <Button
+                mode="contained"
+                onPress={() => navigation.navigate('ResetPasswordScreen')}
+                >
+                Reset Password
+            </Button>
+
         </Background>
         
         </>

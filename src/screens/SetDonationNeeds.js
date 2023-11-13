@@ -135,6 +135,10 @@ export default function SetDonationNeeds({ navigation }) {
                 <Background>
                     <Header>Add New Request</Header>
 
+                    <Button mode="contained" onPress={onAddRequestPressed}>
+                        Add
+                    </Button>
+
                     <TextInput
                         label="Item"
                         returnKeyType="next"
@@ -152,9 +156,6 @@ export default function SetDonationNeeds({ navigation }) {
                         error={!!desc.error}
                         errorText={desc.error}
                     />
-                    <Button mode="contained" onPress={onAddRequestPressed}>
-                        Add
-                    </Button>
                     <Header>Your Donation Requests</Header>
 
                     <View height='35%'>
