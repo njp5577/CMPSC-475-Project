@@ -95,13 +95,7 @@ export default function OrgProfile ({navigation}) {
 
                 <Text style={[styles.text,styles.subText]}>Phone: {phone.value}</Text>
 
-                <Button
-                    mode="contained"
-
-                    onPress={() => navigation.navigate('OrgDashboard', {currentOrg: currentOrg})}
-                >
-                    Home
-                </Button>
+                
             </Background>
             
         </>
