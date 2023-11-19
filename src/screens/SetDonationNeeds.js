@@ -156,7 +156,7 @@ export default function SetDonationNeeds({ navigation }) {
                         error={!!desc.error}
                         errorText={desc.error}
                     />
-                    <Header>Your Donation Requests</Header>
+                    <Header>Your Donation Needs</Header>
 
                     <View height='35%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >

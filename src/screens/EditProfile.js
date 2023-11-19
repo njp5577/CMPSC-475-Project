@@ -57,7 +57,7 @@ export default function EditProfile ({navigation}) {
 
     return (
         <>
-        <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+        <Navbar title="My App" navigation= {navigation} currentUser = { currentUser } ></Navbar>
         
         <Background>
             

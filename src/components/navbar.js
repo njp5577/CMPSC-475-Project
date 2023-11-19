@@ -4,6 +4,7 @@ import { theme } from '../core/theme'
 import BackButton from './BackButton';
 import Homebutton from './HomeButton';
 import ProfileButton from './ProfileButton';
+import NotiButton from './NotiButton';
 
 
 
@@ -12,6 +13,8 @@ class Navbar extends Component {
     const { title } = this.props;
     const { navigation } = this.props;
     const { currentUser } =  this.props;
+    const { active } = this.props;
+    
     return (
         
             <View style={styles.navbar}>
@@ -22,10 +25,17 @@ class Navbar extends Component {
                 <View style = {{ width: '20%'}}>
                   <Homebutton currentUser={currentUser} navigation={navigation} /> 
                 </View>
+
+                <View style = {{ width: '20%'}}>
+                  <NotiButton currentUser={currentUser} navigation={navigation} active={active}/>
+                </View>
                 
                 <View style = {{ width: '20%'}}>
-                  <ProfileButton currentUser={currentUser} navigation={navigation} />
+                  <ProfileButton currentUser={currentUser} navigation={navigation}  />
                 </View>
+                
+
+                
             
             
             

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -11,28 +11,32 @@ import { theme } from '../core/theme'
 import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
 import Navbar from "../components/navbar";
-import {firebase} from "../firebase/config";
+import { firebase } from "../firebase/config";
 import { itemValidator } from '../helpers/itemValidator'
 import { descriptionValidator } from '../helpers/descriptionValidator'
 
 export default function Donate({ navigation }) {
+
+
+
+
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
 
-    if(JSON.stringify(current) == "\"\""){
+    if (JSON.stringify(current) == "\"\"") {
         var currentUser = "No User"
     }
-    else{
+    else {
         var currentUser = current
     }
 
     const orgCurrent = route.params?.currentOrg || ""
 
-    if(JSON.stringify(orgCurrent) == "\"\""){
+    if (JSON.stringify(orgCurrent) == "\"\"") {
         var currentOrg = "No Org"
     }
-    else{
+    else {
         var currentOrg = orgCurrent
     }
 
@@ -41,6 +45,8 @@ export default function Donate({ navigation }) {
     const [item, setItem] = useState({ value: '', error: '' })
     const [comment, setComment] = useState({ value: '', error: '' })
     const [amount, setAmount] = useState({ value: '', error: '' })
+    const [needs, setNeeds] = useState({ value: [] })
+    const [change, setChange] = useState({ value: 0 })
 
     const onOfferPressed = async () => {
         const itemError = itemValidator(item.value)
@@ -50,9 +56,9 @@ export default function Donate({ navigation }) {
         var inList = 0
 
         if (itemError || amountError || commentError) {
-            setItem({...item, error: itemError})
-            setComment({...comment, error: commentError})
-            setAmount({...amount, error: amountError})
+            setItem({ ...item, error: itemError })
+            setComment({ ...comment, error: commentError })
+            setAmount({ ...amount, error: amountError })
             return
         }
 
@@ -62,11 +68,11 @@ export default function Donate({ navigation }) {
 
         if (docOne.empty) {
             console.log('Organization is not requesting this item!');
-            setItem({...item, error: "Organization is not requesting this item"})
+            setItem({ ...item, error: "Organization is not requesting this item" })
             inList = 0
             return
         }
-        else{
+        else {
             console.log('Item is in list!');
             inList = 1
         }
@@ -88,36 +94,76 @@ export default function Donate({ navigation }) {
 
                 const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString() + " : " + currentOrg.toString()
 
-                userOfferRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
-                 comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString()}).then()
+                userOfferRef.doc(document).set({
+                    userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
+                    comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString()
+                }).then()
 
-                navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})
+                navigation.navigate('OrgPage', { currentUser: currentUser, currentOrg: currentOrg })
             }
-            else{
+            else {
                 console.log("You have already put up an offer to this organization for this item")
 
-                setItem({...item, error: "You have already put up an offer to this organization for this item"})
+                setItem({ ...item, error: "You have already put up an offer to this organization for this item" })
 
                 return
             }
         }
     }
 
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var needList = []
+
+            console.log("Set needs : " + change.value)
+            const postingRef = needRef.where("email", "==", currentOrg.toString());
+            try {
+                const docOne = await postingRef.get();
+
+                for (var i = 0; i < docOne.size; i++) {
+                    needList.push(docOne.docs[i])
+                }
+
+                setNeeds({ value: needList })
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [change])
+
+    const needCards = needs.value.map((item, pos) => {
+
+        return (
+            <View className="NeedCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("desc").toString()}</Text>
+                <Button style={[styles.item,styles.button]} mode="contained" onPress={() => onDeletePressed(item.get("need").toString())}>
+                    Delete
+                </Button>
+            </View>
+        )
+    })
+
     return (
         <>
-            <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
-            
-        <Background>
-            <Logo />
-            <Header>Donate to this organization!</Header>
-            <TextInput
+            <Navbar title="My App" navigation={navigation} currentUser={currentUser}></Navbar>
+
+            <Background>
+                <Logo />
+                <Header>Donate to this organization!</Header>
+                <TextInput
                     label="Item"
                     returnKeyType="next"
                     value={item.value}
                     onChangeText={(text) => setItem({ value: text, error: '' })}
                     error={!!item.error}
                     errorText={item.error}
-                    width= '50%'
+                    width='50%'
                 />
                 <TextInput
                     label="Comment"
@@ -135,18 +181,22 @@ export default function Donate({ navigation }) {
                     error={!!amount.error}
                     errorText={amount.error}
                 />
-            <Button mode="contained" onPress={onOfferPressed}>
-                Submit donation
-            </Button>
-            <Button
-                mode="contained"
+                <Button mode="contained" onPress={onOfferPressed}>
+                    Submit donation
+                </Button>
+                <Button
+                    mode="contained"
 
-                onPress={() => navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})}
-            >
-                Organization Page
-            </Button>
-        </Background>
-    
+                    onPress={() => navigation.navigate('OrgPage', { currentUser: currentUser, currentOrg: currentOrg })}
+                >
+                    Organization Page
+                </Button>
+
+                <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                    {needCards}
+                </ScrollView>
+            </Background>
+
         </>
     )
 }
@@ -168,5 +218,25 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    item: {
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    NeedCard: {
+        flex: 1,
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
 })
