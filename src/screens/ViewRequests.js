@@ -99,11 +99,12 @@ export default function ViewRequests({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
-                <View flexDirection="row" justifyContent="center">
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                     <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Pend
                     </Button>
@@ -120,11 +121,13 @@ export default function ViewRequests({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
+                
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
-                <View flexDirection="row" justifyContent="center">
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                     <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
@@ -140,11 +143,12 @@ export default function ViewRequests({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
-                <View flexDirection="row" justifyContent="center">
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                     <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
@@ -200,21 +204,21 @@ export default function ViewRequests({ navigation }) {
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
                 <Background>
                     <Header>Donation Requests Accepted</Header>
-                    <View height='25%'>
+                    <View height='26%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {acceptedNeedCards}
                     </ScrollView>
                     </View>
 
                     <Header>Donation Requests Pending</Header>
-                    <View height='25%'>
+                    <View height='26%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {pendingNeedCards}
                     </ScrollView>
                     </View>
 
                     <Header>Donation Requests Declined</Header>
-                    <View height='25%'>
+                    <View height='26%'>
                     <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
                         {declinedNeedCards}
                     </ScrollView>
@@ -253,6 +257,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginLeft: 20,
         marginRight: 20,
+        fontSize: 12
     },
     NeedCard: {
         flex: 1,

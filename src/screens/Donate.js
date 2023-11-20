@@ -156,8 +156,10 @@ export default function Donate({ navigation }) {
     return (
         <>
             <Navbar title="My App" navigation={navigation} currentUser={currentUser}></Navbar>
-
+            <ScrollView contentContainerStyle={styles.scrollview} >
             <Background>
+            
+                
                 <Logo />
                 <Header>Donate to this organization!</Header>
                 <TextInput
@@ -210,10 +212,13 @@ export default function Donate({ navigation }) {
                     Organization Page
                 </Button>
 
-                <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} style={styles.padding} >
                     {needCards}
                 </ScrollView>
+                    
+                
             </Background>
+            </ScrollView>
 
         </>
     )
@@ -257,4 +262,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         backgroundColor: '#FFFAD7',
     },
+    padding: {
+        padding: 20,
+    }
 })
