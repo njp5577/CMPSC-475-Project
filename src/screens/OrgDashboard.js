@@ -25,6 +25,8 @@ export default function OrgDashboard({ navigation }) {
         var currentOrg = orgCurrent
     }
 
+    console.log("Profile: " + currentOrg.toString())
+
     const [name, setName] = useState({ value: ''})
 
     const orgsRef = firebase.firestore().collection('Orgs')

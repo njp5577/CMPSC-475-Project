@@ -42,7 +42,7 @@ export default function OrgProfile ({navigation}) {
             var nameString
             var inputString
 
-            console.log("Profile")
+            console.log("Profile: " + currentOrg.toString())
 
             try {
                 const docOne = await accountRef.get();

@@ -104,7 +104,7 @@ export default function Dashboard({ navigation }) {
             <Button
                 mode="contained"
 
-                onPress={() => navigation.navigate('LoginScreen', {currentUser: currentUser})}
+                onPress={() => navigation.navigate('StartScreen', {currentUser: currentUser})}
             >
                 Sign Out
             </Button>

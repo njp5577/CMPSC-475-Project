@@ -4,7 +4,7 @@ import { theme } from '../core/theme'
 import BackButton from './BackButton';
 import OrgHomebutton from './OrgHomeButton';
 import OrgProfileButton from './OrgProfileButton';
-
+import OrgNotiButton from './OrgNotiButton';
 
 
 class OrgNavbar extends Component {
@@ -12,6 +12,8 @@ class OrgNavbar extends Component {
         const { title } = this.props;
         const { navigation } = this.props;
         const { currentOrg } =  this.props;
+        const { active } = this.props;
+
         return (
 
             <View style={styles.navbar}>
@@ -19,11 +21,15 @@ class OrgNavbar extends Component {
                     <BackButton goBack={navigation.goBack} />
                 </View>
                 <View style = {{ width: '20%'}}>
-                    <OrgHomebutton currentUser={currentOrg} navigation={navigation} destination={'OrgDashboard'} />
+                    <OrgHomebutton currentOrg={currentOrg} navigation={navigation} destination={'OrgDashboard'} />
                 </View>
 
                 <View style = {{ width: '20%'}}>
-                    <OrgProfileButton currentUser={currentOrg} navigation={navigation} destination={'OrgProfile'}/>
+                  <OrgNotiButton currentOrg={currentOrg} navigation={navigation} active={active}/>
+                </View>
+
+                <View style = {{ width: '20%'}}>
+                    <OrgProfileButton currentOrg={currentOrg} navigation={navigation} destination={'OrgProfile'}/>
                 </View>
 
 

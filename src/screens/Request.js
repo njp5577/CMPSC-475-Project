@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -11,7 +11,7 @@ import { theme } from '../core/theme'
 import { donationValidator } from '../helpers/donationValidator'
 import { useRoute } from '@react-navigation/native'
 import Navbar from "../components/navbar";
-import {firebase} from "../firebase/config";
+import { firebase } from "../firebase/config";
 import { itemValidator } from '../helpers/itemValidator'
 import { descriptionValidator } from '../helpers/descriptionValidator'
 import moment from 'moment'
@@ -42,6 +42,8 @@ export default function Request({ navigation }) {
     const [item, setItem] = useState({ value: '', error: '' })
     const [comment, setComment] = useState({ value: '', error: '' })
     const [amount, setAmount] = useState({ value: '', error: '' })
+    const [needs, setNeeds] = useState({ value: [] })
+    const [change, setChange] = useState({ value: 0 })
 
     const onRequestPressed = async () => {
         const itemError = itemValidator(item.value)
@@ -108,13 +110,48 @@ export default function Request({ navigation }) {
         }
     }
 
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var needList = []
+
+            console.log("Set available items : " + change.value)
+            const postingRef = availableRef.where("email", "==", currentOrg.toString());
+            try {
+                const docOne = await postingRef.get();
+
+                for (var i = 0; i < docOne.size; i++) {
+                    needList.push(docOne.docs[i])
+                }
+
+                setNeeds({ value: needList })
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [change])
+
+    const needCards = needs.value.map((item, pos) => {
+
+        return (
+            <View className="NeedCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Item: {item.get("item").toString()}</Text>
+                <Text style={styles.item}>Quantity: {item.get("desc").toString()}</Text>
+            </View>
+        )
+    })
+
     return (
         <>
             <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
             
             <Background>
                 <Logo />
-                <Header>Request assistance this organization!</Header>
+                <Header>Request assistance!</Header>
                 <TextInput
                     label="Item"
                     returnKeyType="next"
@@ -150,6 +187,10 @@ export default function Request({ navigation }) {
                 >
                     Organization Page
                 </Button>
+
+                <ScrollView horizontal={true} contentContainerStyle={styles.scrollview} >
+                    {needCards}
+                </ScrollView>
             </Background>
             
         </>
@@ -173,5 +214,25 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    scrollview: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    item: {
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    NeedCard: {
+        flex: 1,
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
 })

@@ -145,9 +145,6 @@ export default function Donate({ navigation }) {
             <View className="NeedCard" style={styles.NeedCard} key={pos}>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("desc").toString()}</Text>
-                <Button style={[styles.item,styles.button]} mode="contained" onPress={() => onDeletePressed(item.get("need").toString())}>
-                    Delete
-                </Button>
             </View>
         )
     })

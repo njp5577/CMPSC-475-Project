@@ -32,6 +32,7 @@ import {
   AdminAddAccount,
   AdminDeleteUser,
   AdminDeleteOrg,
+  Notification,
 } from './src/screens'
 
 const Stack = createStackNavigator()
@@ -55,6 +56,7 @@ export default function App() {
           <Stack.Screen name="Donate" component={Donate} />
           <Stack.Screen name="Request" component={Request} />
           <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen name="Notification" component={Notification}/>
           <Stack.Screen name="SentDonationOffers" component={SentDonationOffers} />
           <Stack.Screen name="SentDonationRequests" component={SentDonationRequests} />
           <Stack.Screen name="OrgLogin" component={OrgLogin} />

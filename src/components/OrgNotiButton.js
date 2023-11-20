@@ -2,10 +2,10 @@ import React from 'react'
 import { TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-export default function NotiButton({ currentUser, navigation, active }) {
+export default function OrgNotiButton({ currentOrg, navigation, active }) {
     
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('Notification', {currentUser: currentUser})} style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('OrgProfile', {currentOrg: currentOrg})} style={styles.container}>
         {active ? (
             <Image
             style={styles.image}
