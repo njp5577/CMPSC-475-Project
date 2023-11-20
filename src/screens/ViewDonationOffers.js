@@ -16,6 +16,7 @@ import moment from 'moment'
 
 
 export default function ViewDonationOffers({ navigation }) {
+    
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -98,12 +99,13 @@ export default function ViewDonationOffers({ navigation }) {
     }
 
     const acceptedNeedCards = acceptedNeeds.value.map((item, pos) => {
-
+        
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
+                <Text style={styles.item} >Cost: ${item.get("cost").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
@@ -119,12 +121,12 @@ export default function ViewDonationOffers({ navigation }) {
     })
 
     const pendingNeedCards = pendingNeeds.value.map((item, pos) => {
-
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item} >Quantity: {item.get("amount").toString()}</Text>
+                <Text style={styles.item} >Cost: ${item.get("cost").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
@@ -140,12 +142,12 @@ export default function ViewDonationOffers({ navigation }) {
     })
 
     const declinedNeedCards = declinedNeeds.value.map((item, pos) => {
-
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
                 <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
+                <Text style={styles.item} >Cost: ${item.get("cost").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
@@ -197,7 +199,7 @@ export default function ViewDonationOffers({ navigation }) {
         getInfo().then()
 
     }, [change])
-
+    
     return (
         <>
             <OrgNavbar title="My App" navigation={navigation} currentOrg={currentOrg}></OrgNavbar>
@@ -224,6 +226,7 @@ export default function ViewDonationOffers({ navigation }) {
                         {declinedNeedCards}
                     </ScrollView>
                     </View>
+                    
 
 
                 </Background>

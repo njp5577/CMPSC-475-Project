@@ -46,6 +46,7 @@ export default function Donate({ navigation }) {
     const [item, setItem] = useState({ value: '', error: '' })
     const [comment, setComment] = useState({ value: '', error: '' })
     const [amount, setAmount] = useState({ value: '', error: '' })
+    const [cost, setCost] = useState({ value: '', error: '' })
     const [needs, setNeeds] = useState({ value: [] })
     const [change, setChange] = useState({ value: 0 })
 
@@ -56,10 +57,11 @@ export default function Donate({ navigation }) {
 
         var inList = 0
 
-        if (itemError || amountError || commentError) {
+        if (itemError || amountError || commentError ) {
             setItem({ ...item, error: itemError })
             setComment({ ...comment, error: commentError })
             setAmount({ ...amount, error: amountError })
+            setCost({ ...cost, error: amountError })
             return
         }
 
@@ -100,7 +102,7 @@ export default function Donate({ navigation }) {
                 const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString() + " : " + time.toString()
 
                 await userOfferRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
-                 comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString(), time: time.toString()}).then()
+                 comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString(), time: time.toString(), cost: cost.value}).then()
 
                 navigation.navigate('OrgPage', { currentUser: currentUser, currentOrg: currentOrg })
             }
@@ -149,6 +151,8 @@ export default function Donate({ navigation }) {
         )
     })
 
+    const regex = /^(\$?\d{1,3}(,\d{3})*(\.\d{2})?)$/;
+
     return (
         <>
             <Navbar title="My App" navigation={navigation} currentUser={currentUser}></Navbar>
@@ -180,6 +184,20 @@ export default function Donate({ navigation }) {
                     onChangeText={(text) => setAmount({ value: text, error: '' })}
                     error={!!amount.error}
                     errorText={amount.error}
+                />
+                <TextInput
+                    label="Cost of Item"
+                    returnKeyType="done"
+                    value={cost.value}
+                    onChangeText={(text) => {
+                        if (regex.test(text)) {
+                            setCost({ value: text, error: '' });
+                        } else {
+                            setCost({ value: text, error: 'Invalid dollar amount' });
+                        }
+                    }}
+                    error={!!cost.error}
+                    errorText={cost.error}
                 />
                 <Button mode="contained" onPress={onOfferPressed}>
                     Submit donation

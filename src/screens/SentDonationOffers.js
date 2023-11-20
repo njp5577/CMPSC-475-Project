@@ -32,6 +32,7 @@ export default function SentDonationOffers ({navigation}) {
 
     const [offers, setOffers] = useState({ value: []})
     const [change, setChange] = useState({ value: 0})
+    const [totalCost, setTotalCost] = useState({ value: 0 })
 
     const offerRef = firebase.firestore().collection('DonationOffers')
 
@@ -46,13 +47,14 @@ export default function SentDonationOffers ({navigation}) {
     }
     //style={[styles.button]}
     const OfferCards = offers.value.map((item, pos) =>{
-
+        totalCost.value = totalCost.value + parseFloat(item.get("cost"))
         return (
             <View style={styles.NeedCard} className="OfferCard" key={pos}>
                 <View>
                 <Text style={styles.item}>Time Sent: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
+                <Text style={styles.item} >Cost: ${item.get("cost").toString()}</Text>
                 <Text style={styles.item}>Org Email: {item.get("orgEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 </View>
@@ -110,7 +112,8 @@ export default function SentDonationOffers ({navigation}) {
 
                 <Header>Your Donation Offers{"\n"}</Header>
 
-                <View>{OfferCards}</View>
+                <View >{OfferCards}</View>
+                <Header >Total Cost: ${totalCost.value}</Header>
             </Background>
             </ScrollView>
         </>
