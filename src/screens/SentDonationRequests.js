@@ -14,6 +14,7 @@ import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
 import Navbar from "../components/navbar";
 import {deleteDoc, doc} from "firebase/firestore";
+import moment from 'moment'
 
 
 export default function SentDonationRequests ({navigation}) {
@@ -33,9 +34,9 @@ export default function SentDonationRequests ({navigation}) {
 
     const requestRef = firebase.firestore().collection('DonationRequests')
 
-    const onCancelPressed = async (sentRequest, sentEmail) => {
+    const onCancelPressed = async (sentRequest, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentRequest
+        const docName = sentEmail + " : " + sentRequest + " : " + sentTime
 
         console.log(docName + " Deleted")
 
@@ -48,15 +49,15 @@ export default function SentDonationRequests ({navigation}) {
         return (
             <View style={styles.NeedCard} className="RequestCard" key={pos}>
                 <View>
+                <Text style={styles.item}>Time Sent: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Org Email: {item.get("orgEmail").toString()}</Text>
-                <Text style={styles.item}>{item.get("orgEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 </View>
                 <View flexDirection='row' width='90%'>
                 <Text style={styles.item} paddingTop='2%'>Status: {item.get("status").toString()}</Text>
-                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                     Cancel
                 </SmallButton>
                 </View>

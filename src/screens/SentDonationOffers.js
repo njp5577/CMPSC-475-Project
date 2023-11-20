@@ -15,6 +15,7 @@ import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
 import Navbar from "../components/navbar";
 import {deleteDoc, doc} from "firebase/firestore";
+import moment from 'moment'
 
 
 export default function SentDonationOffers ({navigation}) {
@@ -34,9 +35,9 @@ export default function SentDonationOffers ({navigation}) {
 
     const offerRef = firebase.firestore().collection('DonationOffers')
 
-    const onCancelPressed = async (sentOffer, sentEmail) => {
+    const onCancelPressed = async (sentOffer, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentOffer
+        const docName = sentEmail + " : " + sentOffer + " : " + sentTime
 
         console.log(docName + " Deleted")
 
@@ -49,6 +50,7 @@ export default function SentDonationOffers ({navigation}) {
         return (
             <View style={styles.NeedCard} className="OfferCard" key={pos}>
                 <View>
+                <Text style={styles.item}>Time Sent: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Org Email: {item.get("orgEmail").toString()}</Text>
@@ -56,7 +58,7 @@ export default function SentDonationOffers ({navigation}) {
                 </View>
                 <View flexDirection='row' width='90%'>
                 <Text style={styles.item} paddingTop='2%'>Status: {item.get("status").toString()}</Text>
-                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                     Cancel
                 </SmallButton>
                 </View>

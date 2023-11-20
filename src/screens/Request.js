@@ -14,6 +14,7 @@ import Navbar from "../components/navbar";
 import {firebase} from "../firebase/config";
 import { itemValidator } from '../helpers/itemValidator'
 import { descriptionValidator } from '../helpers/descriptionValidator'
+import moment from 'moment'
 
 export default function Request({ navigation }) {
     const route = useRoute()
@@ -86,10 +87,14 @@ export default function Request({ navigation }) {
 
             if (docTwo.empty) {
 
-                const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString() + " : " + currentOrg.toString()
+                const today = new Date()
 
-                userRequestRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
-                    comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString()}).then()
+                const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+                const document = docThree.docs[0].get("email").toString() + " : " + item.value.toString() + ' : ' + time.toString()
+
+                await userRequestRef.doc(document).set({userEmail: docThree.docs[0].get("email").toString(), need: item.value.toString(), amount: amount.value.toString(),
+                    comment: comment.value.toString(), status: "pending", orgEmail: currentOrg.toString(), time: time.toString()}).then()
 
                 navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})
             }

@@ -12,6 +12,7 @@ import { useRoute } from '@react-navigation/native'
 import { firebase } from "../firebase/config";
 import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
+import moment from 'moment'
 
 
 export default function ViewDonationOffers({ navigation }) {
@@ -34,33 +35,65 @@ export default function ViewDonationOffers({ navigation }) {
 
     const postingRef = needRef.where("orgEmail", "==", currentOrg.toString());
 
-    const onAcceptRequestPressed = async (sentItem, sentEmail) => {
+    const notificationRef = firebase.firestore().collection('Notifications')
 
-        const docName = sentEmail + " : " + sentItem
+    const onAcceptRequestPressed = async (sentItem, sentEmail, sentTime) => {
+
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
         await needRef.doc(docName).set({ status: "accepted" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your donation offer of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response"})
+
         setChange({ value: (1) })
     }
 
-    const onPendingRequestPressed = async (sentItem, sentEmail) => {
+    const onPendingRequestPressed = async (sentItem, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentItem
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
         await needRef.doc(docName).set({ status: "pending" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your donation offer of " + sentItem + " that you sent at " + sentTime + " has been put on hold."
+
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response"})
+
         setChange({ value: (1) })
     }
 
-    const onDeclineRequestPressed = async (sentItem, sentEmail) => {
+    const onDeclineRequestPressed = async (sentItem, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentItem
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
         await needRef.doc(docName).set({ status: "declined" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your donation offer of " + sentItem + " that you sent at " + sentTime + " has been declined."
+
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response"})
+
         setChange({ value: (1) })
     }
 
@@ -68,15 +101,16 @@ export default function ViewDonationOffers({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Pend
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Decline
                     </Button>
                 </View>
@@ -88,15 +122,16 @@ export default function ViewDonationOffers({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item} >Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Decline
                     </Button>
                 </View>
@@ -108,15 +143,16 @@ export default function ViewDonationOffers({ navigation }) {
 
         return (
             <View style={styles.NeedCard} className="NeedCard" key={pos}>
+                <Text style={styles.item}>Date: {item.get("time").toString()}</Text>
                 <Text style={styles.item}>Item: {item.get("need").toString()}</Text>
                 <Text style={styles.item}>Quantity: {item.get("amount").toString()}</Text>
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Pend
                     </Button>
                 </View>

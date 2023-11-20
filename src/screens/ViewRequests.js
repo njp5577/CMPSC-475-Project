@@ -12,6 +12,7 @@ import { useRoute } from '@react-navigation/native'
 import { firebase } from "../firebase/config";
 import Paragraph from '../components/Paragraph'
 import OrgNavbar from "../components/orgNavbar";
+import moment from 'moment'
 
 
 export default function ViewRequests({ navigation }) {
@@ -41,6 +42,16 @@ export default function ViewRequests({ navigation }) {
         console.log(docName)
 
         await requestRef.doc(docName).set({ status: "accepted" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+
+        await notificationRef.set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
+
         setChange({ value: (1) })
     }
 
@@ -51,6 +62,16 @@ export default function ViewRequests({ navigation }) {
         console.log(docName)
 
         await requestRef.doc(docName).set({ status: "pending" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+
+        await notificationRef.set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
+
         setChange({ value: (1) })
     }
 
@@ -61,6 +82,16 @@ export default function ViewRequests({ navigation }) {
         console.log(docName)
 
         await requestRef.doc(docName).set({ status: "declined" }, { merge: true })
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+
+        await notificationRef.set({active: "true", message: message, to: sentEmail,
+            from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
+
         setChange({ value: (1) })
     }
 
@@ -73,10 +104,10 @@ export default function ViewRequests({ navigation }) {
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Pend
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Decline
                     </Button>
                 </View>
@@ -94,10 +125,10 @@ export default function ViewRequests({ navigation }) {
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onDeclineRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Decline
                     </Button>
                 </View>
@@ -114,10 +145,10 @@ export default function ViewRequests({ navigation }) {
                 <Text style={styles.item}>Email: {item.get("userEmail").toString()}</Text>
                 <Text style={styles.item}>Comment: {item.get("comment").toString()}</Text>
                 <View flexDirection="row" justifyContent="center">
-                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onAcceptRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Accept
                     </Button>
-                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString())}>
+                    <Button style={[styles.button]} mode="contained" onPress={() => onPendingRequestPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
                         Pend
                     </Button>
                 </View>
