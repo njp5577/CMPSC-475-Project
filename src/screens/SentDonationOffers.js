@@ -32,22 +32,36 @@ export default function SentDonationOffers ({navigation}) {
 
     const [offers, setOffers] = useState({ value: []})
     const [change, setChange] = useState({ value: 0})
-    const [totalCost, setTotalCost] = useState({ value: 0 })
+    const [totalCost, setTotalCost] = useState({ value: 0.00 })
+
+    const notificationRef = firebase.firestore().collection('Notifications')
 
     const offerRef = firebase.firestore().collection('DonationOffers')
 
-    const onCancelPressed = async (sentOffer, sentEmail, sentTime) => {
+    const onCancelPressed = async (sentOffer, sentEmail, sentTime, sentOrg) => {
 
         const docName = sentEmail + " : " + sentOffer + " : " + sentTime
 
         console.log(docName + " Deleted")
 
         await deleteDoc(doc(db, "DonationOffers", docName));
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "A request for " + sentOffer + " that was sent at " + sentTime + "by has been canceled."
+
+        await notificationRef.doc().set({active: "true", message: message, to: sentOrg,
+            from: sentEmail, time: time.toString(), type: "cancellation"})
+
         setChange({ value: (1)})
     }
     //style={[styles.button]}
     const OfferCards = offers.value.map((item, pos) =>{
-        totalCost.value = totalCost.value + parseFloat(item.get("cost"))
+        if(item.get("status") == "accepted"){
+            totalCost.value = totalCost.value + parseFloat(item.get("cost"))
+        }
         return (
             <View style={styles.NeedCard} className="OfferCard" key={pos}>
                 <View>
@@ -60,7 +74,7 @@ export default function SentDonationOffers ({navigation}) {
                 </View>
                 <View flexDirection='row' width='90%'>
                 <Text style={styles.item} paddingTop='2%'>Status: {item.get("status").toString()}</Text>
-                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
+                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString(), item.get("orgEmail").toString())}>
                     Cancel
                 </SmallButton>
                 </View>
@@ -113,7 +127,7 @@ export default function SentDonationOffers ({navigation}) {
                 <Header>Your Donation Offers{"\n"}</Header>
 
                 <View >{OfferCards}</View>
-                <Header >Total Cost: ${totalCost.value}</Header>
+                <Header>Total Cost of Accepted Donations: ${totalCost.value}</Header>
             </Background>
             </ScrollView>
         </>

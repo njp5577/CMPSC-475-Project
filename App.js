@@ -33,6 +33,7 @@ import {
   AdminDeleteUser,
   AdminDeleteOrg,
   Notification,
+  OrgNotification,
 } from './src/screens'
 
 const Stack = createStackNavigator()
@@ -64,6 +65,7 @@ export default function App() {
           <Stack.Screen name="OrgDashboard" component={OrgDashboard} />
           <Stack.Screen name="OrgMapPage" component={OrgMapPage} />
           <Stack.Screen name="OrgProfile" component={OrgProfile} />
+          <Stack.Screen name="OrgNotification" component={OrgNotification}/>
           <Stack.Screen name="SetDonationNeeds" component={SetDonationNeeds} />
           <Stack.Screen name="ViewDonationOffers" component={ViewDonationOffers} />
           <Stack.Screen name="OrgResetPassword" component={OrgResetPassword} />

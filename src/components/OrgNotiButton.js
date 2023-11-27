@@ -5,7 +5,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height'
 export default function OrgNotiButton({ currentOrg, navigation, active }) {
     
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('OrgProfile', {currentOrg: currentOrg})} style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('OrgNotification', {currentOrg: currentOrg})} style={styles.container}>
         {active ? (
             <Image
             style={styles.image}

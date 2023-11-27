@@ -49,7 +49,7 @@ export default function ViewRequests({ navigation }) {
 
         const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
 
-        await notificationRef.set({active: "true", message: message, to: sentEmail,
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
             from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
 
         setChange({ value: (1) })
@@ -67,9 +67,9 @@ export default function ViewRequests({ navigation }) {
 
         const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
 
-        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been put on hold."
 
-        await notificationRef.set({active: "true", message: message, to: sentEmail,
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
             from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
 
         setChange({ value: (1) })
@@ -87,9 +87,9 @@ export default function ViewRequests({ navigation }) {
 
         const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
 
-        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been accepted. Contact organization at " + currentOrg + "."
+        const message = "Your request of " + sentItem + " that you sent at " + sentTime + " has been declined."
 
-        await notificationRef.set({active: "true", message: message, to: sentEmail,
+        await notificationRef.doc().set({active: "true", message: message, to: sentEmail,
             from: orgCurrent, time: time.toString(), type: "response", global: 'false'})
 
         setChange({ value: (1) })

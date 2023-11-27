@@ -32,15 +32,27 @@ export default function SentDonationRequests ({navigation}) {
     const [requests, setRequests] = useState({ value: []})
     const [change, setChange] = useState({ value: 0})
 
+    const notificationRef = firebase.firestore().collection('Notifications')
+
     const requestRef = firebase.firestore().collection('DonationRequests')
 
-    const onCancelPressed = async (sentRequest, sentEmail, sentTime) => {
+    const onCancelPressed = async (sentRequest, sentEmail, sentTime, sentOrg) => {
 
         const docName = sentEmail + " : " + sentRequest + " : " + sentTime
 
         console.log(docName + " Deleted")
 
         await deleteDoc(doc(db, "DonationRequests", docName));
+
+        const today = new Date()
+
+        const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
+
+        const message = "A request for " + sentRequest + " that was sent at " + sentTime + "by has been canceled."
+
+        await notificationRef.doc().set({active: "true", message: message, to: sentOrg,
+            from: sentEmail, time: time.toString(), type: "cancellation"})
+
         setChange({ value: (1)})
     }
 
@@ -57,7 +69,7 @@ export default function SentDonationRequests ({navigation}) {
                 </View>
                 <View flexDirection='row' width='90%'>
                 <Text style={styles.item} paddingTop='2%'>Status: {item.get("status").toString()}</Text>
-                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString())}>
+                <SmallButton marginBottom='5%' marginRight='5%' mode="contained" onPress={() => onCancelPressed(item.get("need").toString(), item.get("userEmail").toString(), item.get("time").toString(), item.get("orgEmail").toString())}>
                     Cancel
                 </SmallButton>
                 </View>

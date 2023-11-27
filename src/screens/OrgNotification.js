@@ -18,16 +18,16 @@ import {deleteDoc, doc} from "firebase/firestore";
 import moment from 'moment'
 
 
-export default function Notification ({navigation}) {
+export default function OrgNotification ({navigation}) {
     const route = useRoute()
 
-    const current = route.params?.currentUser || ""
+    const orgCurrent = route.params?.currentOrg || ""
 
-    if(JSON.stringify(current) == "\"\""){
-        var currentUser = "No User"
+    if(JSON.stringify(orgCurrent) == "\"\""){
+        var currentOrg = "No Org"
     }
     else{
-        var currentUser = current
+        var currentOrg = orgCurrent
     }
 
     const [notifications, setNotifications] = useState({ value: []})
@@ -57,13 +57,7 @@ export default function Notification ({navigation}) {
 
             var SortedList = []
 
-            const usersRef = firebase.firestore().collection('Users')
-
-            const accountRef = usersRef.where("username", "==", currentUser.toString());
-
-            const docTwo = await accountRef.get();
-
-            var emailString = await (docTwo.docs[0].get("email")).toString()
+            var emailString = currentOrg
 
             const postingRef = notificationsRef.where("to", "==", emailString);
 
@@ -104,7 +98,7 @@ export default function Notification ({navigation}) {
 
     return (
         <>
-            <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
+            <OrgNavbar title="My App" navigation= {navigation} currentOrg = { currentOrg }></OrgNavbar>
             <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
             <Background>
 
