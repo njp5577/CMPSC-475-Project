@@ -35,9 +35,11 @@ export default function ViewRequests({ navigation }) {
 
     const postingRef = requestRef.where("orgEmail", "==", currentOrg.toString());
 
-    const onAcceptRequestPressed = async (sentItem, sentEmail) => {
+    const notificationRef = firebase.firestore().collection('Notifications')
 
-        const docName = sentEmail + " : " + sentItem
+    const onAcceptRequestPressed = async (sentItem, sentEmail, sentTime) => {
+
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
@@ -55,9 +57,9 @@ export default function ViewRequests({ navigation }) {
         setChange({ value: (1) })
     }
 
-    const onPendingRequestPressed = async (sentItem, sentEmail) => {
+    const onPendingRequestPressed = async (sentItem, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentItem
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
@@ -75,9 +77,9 @@ export default function ViewRequests({ navigation }) {
         setChange({ value: (1) })
     }
 
-    const onDeclineRequestPressed = async (sentItem, sentEmail) => {
+    const onDeclineRequestPressed = async (sentItem, sentEmail, sentTime) => {
 
-        const docName = sentEmail + " : " + sentItem
+        const docName = sentEmail + " : " + sentItem + " : " + sentTime
 
         console.log(docName)
 
