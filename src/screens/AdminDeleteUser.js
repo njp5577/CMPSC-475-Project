@@ -29,6 +29,19 @@ export default function AdminDeleteUser({ navigation }) {
     }
 
     const [username, setUsername] = useState({ value: '', error: '' })
+    const [users, setUsers] = useState({ value: []})
+
+    const userCards = users.value.map((item, pos) =>{
+
+        return (
+            <View className="UserCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Username: {item.get("username").toString()}</Text>
+                <Text style={styles.item}>Name: {item.get("name").toString()}</Text>
+                <Text style={styles.item}>Email: {item.get("email").toString()}</Text>
+                <Text style={styles.item}>Admin: {item.get("isAdmin").toString()}</Text>
+            </View>
+        )
+    })
 
     const deleteUser = async () => {
         const usersRef = firebase.firestore().collection('Users')
@@ -74,16 +87,41 @@ export default function AdminDeleteUser({ navigation }) {
                 }
 
                 await docOne.docs[i].ref.delete()
+                navigation.navigate('AdminDashboard', {currentUser: currentUser})
             }
         }
         //await deleteDoc(doc(db, "Users", username.value.toString()));
 
     }
 
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var userList = []
+
+            try {
+                const userRef = firebase.firestore().collection('Users')
+                const docTwo = await userRef.get();
+
+                for(var i = 0; i < docTwo.size; i++){
+                    userList.push(docTwo.docs[i])
+                }
+
+                setUsers({value: userList})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [])
+
     return (
         <>
             
-
+            <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true} style={{flex: 1}}>
             <Background>
             <BackButton goBack={navigation.goBack} />  
 
@@ -103,12 +141,22 @@ export default function AdminDeleteUser({ navigation }) {
                     Delete A User
                 </Button>
 
+                <View marginTop="20%">
+            
+                {userCards}
+                    
+                </View>
+
             </Background>
+            </ScrollView>
         </>
     )
 }
 
 const styles = StyleSheet.create({
+    scrollview: {
+        flexGrow: 1,
+    },
     forgotPassword: {
         width: '100%',
         alignItems: 'flex-end',
@@ -125,5 +173,19 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    item: {
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    NeedCard: {
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
 })

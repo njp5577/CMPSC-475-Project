@@ -25,39 +25,6 @@ export default function Dashboard({ navigation }) {
         var currentUser = current
     }
 
-    const [org, setOrg] = useState({ value: '', error: '' })
-
-    const onOrgSearchPressed = async () => {
-        const orgError = organizationValidator(org.value)
-
-        if (orgError) {
-            setOrg({...org, error: orgError})
-            return
-        }
-
-        let inList = 0
-
-        const orgRef = firebase.firestore().collection('Orgs')
-
-        const accountRef = orgRef.where("name", "==", org.value.toString());
-        const docOne = await accountRef.get();
-        if (docOne.empty) {
-            console.log('Organization does not exist!');
-            setOrg({...org, error: "This organization does not exist"})
-            inList = 0
-            return
-        }
-        else{
-            inList = 1
-        }
-
-        if (inList == 1) {
-            var currentOrg = docOne.docs[0].get("email").toString()
-
-            navigation.navigate('OrgPage', {currentUser: currentUser, currentOrg: currentOrg})
-        }
-    }
-
     return (
         <>
         <Navbar title="My App" navigation= {navigation} currentUser = { currentUser }></Navbar>
@@ -66,18 +33,12 @@ export default function Dashboard({ navigation }) {
             
             <Logo />
             <Header>Welcome {currentUser}!</Header>
-            <TextInput
-                label="Organization"
-                returnKeyType="next"
-                value={org.value}
-                onChangeText={(text) => setOrg({ value: text, error: '' })}
-                error={!!org.error}
-                errorText={org.error}
-                autoCapitalize="none"
-                autoCompleteType="org"
-            />
-            <Button mode="contained" onPress={onOrgSearchPressed}>
-                Search for Organization
+            <Button
+                mode="contained"
+
+                onPress={() => navigation.navigate('SearchOrg', {currentUser: currentUser})}
+            >
+                Search For Organization
             </Button>
 
             <Button

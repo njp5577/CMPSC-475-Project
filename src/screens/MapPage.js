@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -13,6 +13,7 @@ import { useRoute } from '@react-navigation/native'
 import { GoogleMap, useLoadScript, useJsApiLoader } from "@react-google-maps/api";
 import { WebView } from 'react-native-webview';
 import Navbar from '../components/navbar'
+import {firebase} from "../firebase/config";
 
 export default function MapPage({ navigation }) {
     const route = useRoute()
@@ -27,19 +28,41 @@ export default function MapPage({ navigation }) {
     else{
         var currentUser = current
     }
-    const City = "Erie"
-    var mapSourceOne = "https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20"
-    var mapSourceTwo = "%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE"
-    var totalMap = mapSourceOne + City + mapSourceTwo
-    var realMap = <iframe src= { totalMap } 
-    width="600" 
-    height="450" 
-    style= {{ border:0 }} 
-    allowFullScreen="" 
-    loading="lazy" 
-    referrerPolicy="no-referrer-when-downgrade">
-    
-    </iframe>
+    const [totalMap, setTotalMap] = useState({ value: ''})
+
+    const userRef = firebase.firestore().collection('Users')
+
+    const accountRef = userRef.where("username", "==", currentUser.toString());
+
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var cityString
+
+            var stateString
+
+            try {
+                const docOne = await accountRef.get();
+
+                var mapSourceOne = "https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20"
+                var mapSourceTwo = "%20"
+                var mapSourceThree = "&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE"
+
+                cityString = await (docOne.docs[0].get("city")).toString()
+
+                stateString = await (docOne.docs[0].get("state")).toString()
+
+                var link = mapSourceOne + cityString + mapSourceTwo + stateString + mapSourceThree
+
+                await setTotalMap({value: link})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+    }, [])
 //https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20Erie%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE
     //            <WebView source = {{ html: '<iframe src= "" width="600" height="450" style= {{ border:0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade">' }}>
 
@@ -65,17 +88,10 @@ export default function MapPage({ navigation }) {
             loading="lazy"
             allowfullscreen = 
             referrerpolicy="no-referrer-when-downgrade"
-            src="${totalMap}">
+            src="${totalMap.value}">
             </iframe>`
                 }} />
         </View>
-        <Button
-            mode="contained"
-
-            onPress={() => navigation.navigate('Dashboard', { currentUser: currentUser })}>
-
-            Home
-        </Button>
     </>
             
     )

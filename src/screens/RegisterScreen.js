@@ -14,6 +14,10 @@ import { nameValidator } from '../helpers/nameValidator'
 import { usernameValidator } from '../helpers/usernameValidator'
 import {useRoute} from "@react-navigation/native";
 import { firebase } from '../firebase/config'
+import { cityValidator } from '../helpers/cityValidator'
+import { stateValidator } from '../helpers/stateValidator'
+import { streetValidator } from '../helpers/streetValidator'
+import { phoneValidator } from '../helpers/phoneValidator'
 
 const user = {
     username: String,
@@ -40,12 +44,20 @@ export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [city, setCity] = useState({ value: '', error: '' })
+  const [state, setState] = useState({ value: '', error: '' })
+  const [street, setStreet] = useState({ value: '', error: '' })
+  const [phone, setPhone] = useState({ value: '', error: '' })
 
   const onSignUpPressed = async () => {
       const nameError = nameValidator(name.value)
       const usernameError = usernameValidator(username.value)
       const emailError = emailValidator(email.value)
       const passwordError = passwordValidator(password.value)
+      const cityError = cityValidator(city.value)
+      const stateError = stateValidator(state.value)
+      const streetError = streetValidator(street.value)
+      const phoneError = phoneValidator(phone.value)
       var alreadyIn = 0
 
       if (emailError || passwordError || nameError || usernameError) {
@@ -53,6 +65,10 @@ export default function RegisterScreen({ navigation }) {
           setUsername({...username, error: usernameError})
           setEmail({...email, error: emailError})
           setPassword({...password, error: passwordError})
+          setCity({...city, error: cityError})
+          setState({...state, error: stateError})
+          setStreet({...street, error: streetError})
+          setPhone({...phone, error: phoneError})
           return
       }
 
@@ -81,13 +97,14 @@ export default function RegisterScreen({ navigation }) {
           //userList.push(name.value.toString())
 
           usersRef.doc(username.value.toString()).set({username: username.value.toString(), password: password.value.toString(),
-              email: email.value.toString(), name: name.value.toString(), isAdmin: false}).then()
+              email: email.value.toString(), name: name.value.toString(), state: state.value.toString(),
+              city: city.value.toString(), street: street.value.toString(), phone: phone.value.toString(), isAdmin: false}).then()
       }
       navigation.navigate("LoginScreen", {currentUser: currentUser})
   }
 
   return (
-    
+    <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true}>
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
@@ -129,6 +146,38 @@ export default function RegisterScreen({ navigation }) {
         errorText={password.error}
         secureTextEntry
       />
+      <TextInput
+          label="State"
+          returnKeyType="next"
+          value={state.value}
+          onChangeText={(text) => setState({ value: text, error: '' })}
+          error={!!state.error}
+          errorText={state.error}
+      />
+      <TextInput
+          label="City"
+          returnKeyType="next"
+          value={city.value}
+          onChangeText={(text) => setCity({ value: text, error: '' })}
+          error={!!city.error}
+          errorText={city.error}
+      />
+      <TextInput
+          label="Street"
+          returnKeyType="next"
+          value={street.value}
+          onChangeText={(text) => setStreet({ value: text, error: '' })}
+          error={!!street.error}
+          errorText={street.error}
+      />
+      <TextInput
+          label="Phone"
+          returnKeyType="next"
+          value={phone.value}
+          onChangeText={(text) => setPhone({ value: text, error: '' })}
+          error={!!phone.error}
+          errorText={phone.error}
+      />
       <Button
         mode="contained"
         onPress={onSignUpPressed}
@@ -145,7 +194,7 @@ export default function RegisterScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </Background>
-    
+    </ScrollView>
   )
 }
 

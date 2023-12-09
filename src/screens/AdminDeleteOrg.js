@@ -29,6 +29,20 @@ export default function AdminDeleteOrg({ navigation }) {
     }
 
     const [org, setOrg] = useState({ value: '', error: '' })
+    const [orgs, setOrgs] = useState({ value: []})
+
+    const orgCards = orgs.value.map((item, pos) =>{
+
+        return (
+            <View className="OrgCard" style={styles.NeedCard} key={pos}>
+                <Text style={styles.item}>Organization: {item.get("name").toString()}</Text>
+                <Text style={styles.item}>State: {item.get("state").toString()}</Text>
+                <Text style={styles.item}>City: {item.get("city").toString()}</Text>
+                <Text style={styles.item}>Street: {item.get("street").toString()}</Text>
+                
+            </View>
+        )
+    })
 
     const deleteOrg = async () => {
 
@@ -104,15 +118,40 @@ export default function AdminDeleteOrg({ navigation }) {
                 }
 
                 await docOne.docs[i].ref.delete()
+                navigation.navigate('AdminDashboard', {currentUser: currentUser})
             }
         }
         //await deleteDoc(doc(db, "Orgs", org.value.toString()));
 
     }
 
+    useEffect(() => {
+        const getInfo = async () => {
+
+            var orgList = []
+
+            try {
+                const orgRef = firebase.firestore().collection('Orgs')
+                const docTwo = await orgRef.get();
+
+                for(var i = 0; i < docTwo.size; i++){
+                    orgList.push(docTwo.docs[i])
+                }
+
+                setOrgs({value: orgList})
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        getInfo().then()
+
+    }, [])
+
     return (
         <>
-            
+            <ScrollView contentContainerStyle={styles.scrollview} scrollEnabled={true} style={{flex: 1}}>
             <Background>
                 <BackButton goBack={navigation.goBack} />
 
@@ -132,12 +171,22 @@ export default function AdminDeleteOrg({ navigation }) {
                     Delete An Org
                 </Button>
 
+                <View marginTop="20%">
+            
+                {orgCards}
+                    
+                </View>
+
             </Background>
+            </ScrollView>
         </>
     )
 }
 
 const styles = StyleSheet.create({
+    scrollview: {
+        flexGrow: 1,
+    },
     forgotPassword: {
         width: '100%',
         alignItems: 'flex-end',
@@ -154,5 +203,19 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
         color: theme.colors.primary,
+    },
+    item: {
+        marginTop: 5,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+    NeedCard: {
+        borderRadius: 25,
+        borderWidth: 2,
+        alignItems: 'left',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        backgroundColor: '#FFFAD7',
     },
 })
