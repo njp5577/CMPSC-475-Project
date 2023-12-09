@@ -50,7 +50,7 @@ export default function SentDonationOffers ({navigation}) {
 
         const time = moment(today).format("MM-DD-YYYY hh:mm:ss A z");
 
-        const message = "A request for " + sentOffer + " that was sent at " + sentTime + "by " + currentUser.toString() + " has been canceled."
+        const message = "A donation offer of " + sentOffer + " that was sent at " + sentTime + "by " + currentUser.toString() + " has been canceled."
 
         await notificationRef.doc().set({active: "true", message: message, to: sentOrg,
             from: sentEmail, time: time.toString(), type: "cancellation"})
