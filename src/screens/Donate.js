@@ -18,7 +18,7 @@ import moment from 'moment'
 
 export default function Donate({ navigation }) {
 
-
+    //initialize route and state variables
 
 
     const route = useRoute()
@@ -50,6 +50,7 @@ export default function Donate({ navigation }) {
     const [needs, setNeeds] = useState({ value: [] })
     const [change, setChange] = useState({ value: 0 })
 
+    //function for onOfferPressed
     const onOfferPressed = async () => {
         const itemError = itemValidator(item.value)
         const commentError = descriptionValidator(comment.value)
@@ -68,7 +69,7 @@ export default function Donate({ navigation }) {
         const postingRef = needRef.where("email", "==", currentOrg.toString()).where("need", "==", item.value.toString());
 
         const docOne = await postingRef.get();
-
+        //check to make sure item is in list
         if (docOne.empty) {
             console.log('Organization is not requesting this item!');
             setItem({ ...item, error: "Organization is not requesting this item" })
@@ -79,7 +80,7 @@ export default function Donate({ navigation }) {
             console.log('Item is in list!');
             inList = 1
         }
-
+        //create donation offer and verify that user has not already made an offer
         if (inList == 1) {
             const userOfferRef = firebase.firestore().collection('DonationOffers')
             //
@@ -116,6 +117,7 @@ export default function Donate({ navigation }) {
         }
     }
 
+    //get all needs on page load
     useEffect(() => {
         const getInfo = async () => {
 
@@ -141,6 +143,7 @@ export default function Donate({ navigation }) {
 
     }, [change])
 
+    //need cards for all needs 
     const needCards = needs.value.map((item, pos) => {
 
         return (
@@ -151,6 +154,8 @@ export default function Donate({ navigation }) {
         )
     })
 
+
+    //regex for the $ amount
     const regex = /^(\$?\d{1,3}(,\d{3})*(\.\d{2})?)$/;
 
     return (

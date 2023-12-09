@@ -16,6 +16,7 @@ import {WebView} from "react-native-webview";
 import {firebase} from "../firebase/config";
 
 export default function OrgMapPage({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -34,7 +35,7 @@ export default function OrgMapPage({ navigation }) {
     const orgRef = firebase.firestore().collection('Orgs')
 
     const accountRef = orgRef.where("email", "==", currentOrg.toString());
-
+    //load map data on page load
     useEffect(() => {
         const getInfo = async () => {
 

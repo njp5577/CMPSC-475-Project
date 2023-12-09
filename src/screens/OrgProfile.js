@@ -14,6 +14,7 @@ import OrgNavbar from "../components/orgNavbar";
 
 
 export default function OrgProfile ({navigation}) {
+    //initialize route and state variables
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -34,7 +35,7 @@ export default function OrgProfile ({navigation}) {
     const orgRef = firebase.firestore().collection('Orgs')
 
     const accountRef = orgRef.where("email", "==", currentOrg.toString());
-
+    //get org info from database on page load
     useEffect(() => {
         const getInfo = async () => {
             var emailString

@@ -17,6 +17,7 @@ import { initializeApp } from 'firebase/app'
 
 
 export default function AdminDeleteOrg({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -43,16 +44,17 @@ export default function AdminDeleteOrg({ navigation }) {
             </View>
         )
     })
-
+    //function for deleteOrg
     const deleteOrg = async () => {
 
         const orgsRef = firebase.firestore().collection('Orgs')
         const accountRef = orgsRef.where("name", "==", org.value.toString());
         const docOne = await accountRef.get();
-
+        //check org exists
         if (docOne.empty) {
             console.log('Org does not exist!');
         }
+        //delete org and its data from database
         else{
             const offerRef = firebase.firestore().collection('DonationOffers')
 
@@ -61,7 +63,7 @@ export default function AdminDeleteOrg({ navigation }) {
             const availRef = firebase.firestore().collection('AvailableItems')
 
             const needsRef = firebase.firestore().collection('DonationNeeds')
-
+            //delete all data associated with org
             for(var i = 0; i < docOne.size; i++){
                 var email = (await docOne.docs[i].get("email")).toString();
 
@@ -121,10 +123,10 @@ export default function AdminDeleteOrg({ navigation }) {
                 navigation.navigate('AdminDashboard', {currentUser: currentUser})
             }
         }
-        //await deleteDoc(doc(db, "Orgs", org.value.toString()));
+        
 
     }
-
+    //append all orgs to orgs.value on page load
     useEffect(() => {
         const getInfo = async () => {
 

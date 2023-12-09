@@ -19,6 +19,7 @@ import {useRoute} from "@react-navigation/native";
 import { firebase } from '../firebase/config'
 
 export default function OrgRegister({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -39,7 +40,7 @@ export default function OrgRegister({ navigation }) {
     const [state, setState] = useState({ value: '', error: '' })
     const [street, setStreet] = useState({ value: '', error: '' })
     const [phone, setPhone] = useState({ value: '', error: '' })
-
+    //function for onSignUpPressed
     const onSignUpPressed = async () => {
         const nameError = nameValidator(name.value)
         const emailError = emailValidator(email.value)
@@ -50,7 +51,7 @@ export default function OrgRegister({ navigation }) {
         const phoneError = phoneValidator(phone.value)
 
         var alreadyIn = 0
-
+        
         if (emailError || passwordError || nameError || cityError || stateError || streetError || phoneError) {
             setName({...name, error: nameError})//JSON.stringify(userList) + "hi" + (typeof userList).toString()
             setEmail({...email, error: emailError})
@@ -61,7 +62,7 @@ export default function OrgRegister({ navigation }) {
             setPhone({...phone, error: phoneError})
             return
         }
-
+        //check if org already exists
         const emailRef = orgRef.where("email", "==", email.value.toString());
         const docOne = await emailRef.get();
         if (!docOne.empty) {
@@ -78,13 +79,14 @@ export default function OrgRegister({ navigation }) {
             console.log('Org with this address already exists!');
             alreadyIn = 1
         }
-
+        //if org already exists, return
         if (alreadyIn == 1) {
             setEmail({...email, error: "Organization under this email or address already exists"})
             setCity({...email, error: "Organization under this email or address already exists"})
             setState({...email, error: "Organization under this email or address already exists"})
             setStreet({...email, error: "Organization under this email or address already exists"})
             return
+        //else, add org to database
         } else {
 
             orgRef.doc(name.value.toString()).set({name: name.value.toString(), email: email.value.toString(),

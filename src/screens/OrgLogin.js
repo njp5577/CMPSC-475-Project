@@ -14,6 +14,7 @@ import { useRoute } from '@react-navigation/native'
 import {firebase} from "../firebase/config";
 
 export default function OrgLogin({ navigation }){
+    //initialize route and state variables
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -28,6 +29,7 @@ export default function OrgLogin({ navigation }){
     const [password, setPassword] = useState({ value: '', error: '' })
     const [email, setEmail] = useState({ value: '', error: '' })
 
+    //function for onLoginPressed
     const onLoginPressed = async () => {
         const passwordError = passwordValidator(password.value)
         const emailError = emailValidator(email.value)
@@ -51,7 +53,7 @@ export default function OrgLogin({ navigation }){
         else{
             inList = 1
         }
-
+        //check if organization exists
         if (inList == 0) {
             setPassword({...password, error: "Incorrect Login Info"})
             setEmail({...email, error: "Incorrect Login Info"})

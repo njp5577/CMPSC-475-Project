@@ -14,6 +14,7 @@ import { useRoute } from '@react-navigation/native'
 import {firebase} from "../firebase/config";
 
 export default function LoginScreen({ navigation }){
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -28,6 +29,7 @@ export default function LoginScreen({ navigation }){
   const [password, setPassword] = useState({ value: '', error: '' })
   const [username, setUsername] = useState({ value: '', error: '' })
 
+  //function for onLoginPressed
   const onLoginPressed = async () => {
       const passwordError = passwordValidator(password.value)
       const usernameError = usernameValidator(username.value)
@@ -44,6 +46,7 @@ export default function LoginScreen({ navigation }){
       const accountRef = usersRef.where("username", "==", username.value.toString())
           .where("password", "==", password.value.toString());
       const docOne = await accountRef.get();
+      //check if user exists
       if (docOne.empty) {
           console.log('User does not exist!');
           inList = 0
@@ -54,7 +57,7 @@ export default function LoginScreen({ navigation }){
 
       
       
-  
+      
       if (inList == 0) {
           setPassword({...password, error: "Incorrect Login Info"})
           setUsername({...username, error: "Incorrect Login Info"})
@@ -62,7 +65,7 @@ export default function LoginScreen({ navigation }){
       }
 
       currentUser = username.value.toString()
-      
+      //check if user is admin
       if (docOne.docs[0].get("isAdmin")){
         navigation.navigate("AdminDashboard", {currentUser: currentUser})
         return

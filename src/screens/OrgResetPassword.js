@@ -8,60 +8,62 @@ import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
-import {useRoute} from "@react-navigation/native";
-import {firebase} from "../firebase/config";
+import { useRoute } from "@react-navigation/native";
+import { firebase } from "../firebase/config";
 
 export default function OrgResetPassword({ navigation }) {
-    const route = useRoute()
+  //initialize route and state variables
+  const route = useRoute()
 
-    const [email, setEmail] = useState({ value: '', error: '' })
-    const [password, setPassword] = useState({ value: '', error: '' })
-    const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' })
-    var inList = 0
-
+  const [email, setEmail] = useState({ value: '', error: '' })
+  const [password, setPassword] = useState({ value: '', error: '' })
+  const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' })
+  var inList = 0
+  //function for onSignUpPressed
   const sendResetPassword = async () => {
-      const emailError = emailValidator(email.value)
-      const passwordError = passwordValidator(password.value)
-      const confirmPasswordError = passwordValidator(confirmPassword.value)
+    const emailError = emailValidator(email.value)
+    const passwordError = passwordValidator(password.value)
+    const confirmPasswordError = passwordValidator(confirmPassword.value)
 
-      const orgRef = firebase.firestore().collection('Orgs')
+    const orgRef = firebase.firestore().collection('Orgs')
 
-      if (emailError || passwordError || confirmPasswordError) {
-          setEmail({...email, error: emailError})
-          setPassword({...password, error: passwordError})
-          setConfirmPassword({...confirmPassword, error: confirmPasswordError})
-          return
-      }
+    if (emailError || passwordError || confirmPasswordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      setConfirmPassword({ ...confirmPassword, error: confirmPasswordError })
+      return
+    }
 
-      if (confirmPassword.value != password.value) {
-          setPassword({...password, error: "Does not match"})
-          setConfirmPassword({...confirmPassword, error: "Does not match"})
-          return
-      }
+    if (confirmPassword.value != password.value) {
+      setPassword({ ...password, error: "Does not match" })
+      setConfirmPassword({ ...confirmPassword, error: "Does not match" })
+      return
+    }
+    //check if org is in database
+    const accountRef = orgRef.where("email", "==", email.value.toString());
+    const docOne = await accountRef.get();
+    if (docOne.empty) {
+      console.log('Org does not exist!');
+      inList = 0
+    }
+    else {
+      inList = 1
+    }
+   
+    if (inList == 0) {
+      setEmail({ ...email, error: "No account under this email" })
+      return
+    } else {
+      //update password
+      const name = await (docOne.docs[0].get("name")).toString()
+      await orgRef.doc(name).set({ password: password.value.toString() }, { merge: true })
+    }
 
-      const accountRef = orgRef.where("email", "==", email.value.toString());
-      const docOne = await accountRef.get();
-      if (docOne.empty) {
-          console.log('Org does not exist!');
-          inList = 0
-      }
-      else{
-          inList = 1
-      }
-
-      if (inList == 0) {
-          setEmail({...email, error: "No account under this email"})
-          return
-      } else {
-          const name = await (docOne.docs[0].get("name")).toString()
-          await orgRef.doc(name).set({password: password.value.toString()}, {merge: true})
-      }
-
-      navigation.navigate('OrgLogin')
+    navigation.navigate('OrgLogin')
   }
 
   return (
-    
+
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
@@ -79,24 +81,24 @@ export default function OrgResetPassword({ navigation }) {
         keyboardType="email-address"
         description="Your password will be reset"
       />
-        <TextInput
-            label="New Password"
-            returnKeyType="done"
-            value={password.value}
-            onChangeText={(text) => setPassword({ value: text, error: '' })}
-            error={!!password.error}
-            errorText={password.error}
-            secureTextEntry
-        />
-        <TextInput
-            label="Confirm Password"
-            returnKeyType="done"
-            value={confirmPassword.value}
-            onChangeText={(text) => setConfirmPassword({ value: text, error: '' })}
-            error={!!confirmPassword.error}
-            errorText={confirmPassword.error}
-            secureTextEntry
-        />
+      <TextInput
+        label="New Password"
+        returnKeyType="done"
+        value={password.value}
+        onChangeText={(text) => setPassword({ value: text, error: '' })}
+        error={!!password.error}
+        errorText={password.error}
+        secureTextEntry
+      />
+      <TextInput
+        label="Confirm Password"
+        returnKeyType="done"
+        value={confirmPassword.value}
+        onChangeText={(text) => setConfirmPassword({ value: text, error: '' })}
+        error={!!confirmPassword.error}
+        errorText={confirmPassword.error}
+        secureTextEntry
+      />
       <Button
         mode="contained"
         onPress={sendResetPassword}
@@ -105,6 +107,6 @@ export default function OrgResetPassword({ navigation }) {
         Continue
       </Button>
     </Background>
-    
+
   )
 }

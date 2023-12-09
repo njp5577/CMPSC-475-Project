@@ -14,6 +14,7 @@ import { useRoute } from '@react-navigation/native'
 import Navbar from '../components/navbar'
 
 export default function Dashboard({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""

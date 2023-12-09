@@ -16,6 +16,7 @@ import Navbar from '../components/navbar'
 import {firebase} from "../firebase/config";
 
 export default function MapPage({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -33,7 +34,7 @@ export default function MapPage({ navigation }) {
     const userRef = firebase.firestore().collection('Users')
 
     const accountRef = userRef.where("username", "==", currentUser.toString());
-
+    //load map data on page load
     useEffect(() => {
         const getInfo = async () => {
 
@@ -63,8 +64,6 @@ export default function MapPage({ navigation }) {
 
         getInfo().then()
     }, [])
-//https://www.google.com/maps/embed/v1/search?q=Show%20food%20banks%20near%20Erie%20pa&key=AIzaSyD3_KKgTmO_-L1jpj5Z_XL6an7ym_qF2jE
-    //            <WebView source = {{ html: '<iframe src= "" width="600" height="450" style= {{ border:0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade">' }}>
 
     return (
 

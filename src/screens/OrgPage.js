@@ -14,6 +14,7 @@ import Navbar from "../components/navbar";
 import {firebase} from "../firebase/config";
 
 export default function OrgPage({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -44,7 +45,7 @@ export default function OrgPage({ navigation }) {
     const orgRef = firebase.firestore().collection('Orgs')
 
     const accountRef = orgRef.where("email", "==", currentOrg.toString());
-
+    //get org info from database on page load
     useEffect(() => {
         const getInfo = async () => {
             var emailString

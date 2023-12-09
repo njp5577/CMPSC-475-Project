@@ -13,6 +13,7 @@ import {firebase} from "../firebase/config";
 import Navbar from '../components/navbar'
 
 export default function EditProfile ({navigation}) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -33,7 +34,7 @@ export default function EditProfile ({navigation}) {
     const usersRef = firebase.firestore().collection('Users')
 
     const accountRef = usersRef.where("username", "==", currentUser.toString());
-
+    //get user info from database
     useEffect(() => {
         const getInfo = async () => {
             var emailString

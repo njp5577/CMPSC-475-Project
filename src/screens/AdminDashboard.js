@@ -17,7 +17,7 @@ export default function AdminDashboard ({ navigation }) {
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
-
+    //verify if user is logged in
     if(JSON.stringify(current) == "\"\""){
         var currentUser = "No User"
     }

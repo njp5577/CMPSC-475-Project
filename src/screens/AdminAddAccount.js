@@ -27,6 +27,7 @@ const user = {
 }
 
 export default function AdminAddAccount({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -81,6 +82,7 @@ export default function AdminAddAccount({ navigation }) {
 
       const emailRef = usersRef.where("email", "==", email.value.toString());
       const docTwo = await emailRef.get();
+      //check if user already exists
       if (!docTwo.empty) {
           console.log('User with this email already exists!');
           alreadyIn = 1
@@ -90,11 +92,9 @@ export default function AdminAddAccount({ navigation }) {
           setEmail({...email, error: "Account under this email or username already exists"})
           setUsername({...username, error: "Account under this email or username already exists"})
           return
+      //if not, create new user that is an admin
       } else {
-          //userList.push(username.value.toString())
-          //userList.push(password.value.toString())
-          //userList.push(email.value.toString())
-          //userList.push(name.value.toString())
+          
 
           usersRef.doc(username.value.toString()).set({username: username.value.toString(), password: password.value.toString(),
               email: email.value.toString(), name: name.value.toString(), state: state.value.toString(),

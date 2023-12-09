@@ -19,6 +19,7 @@ import moment from 'moment'
 
 
 export default function OrgNotification ({navigation}) {
+    //initialize route and state variables
     const route = useRoute()
 
     const orgCurrent = route.params?.currentOrg || ""
@@ -35,7 +36,7 @@ export default function OrgNotification ({navigation}) {
 
     const notificationsRef = firebase.firestore().collection('Notifications')
 
-    //style={[styles.button]}
+    //notification cards
     const NotificationCards = notifications.value.map((item, pos) =>{
 
         return (
@@ -49,7 +50,7 @@ export default function OrgNotification ({navigation}) {
             </View>
         )
     })
-
+    //get notifications from database when change is updated
     useEffect(() => {
         const getInfo = async () => {
 

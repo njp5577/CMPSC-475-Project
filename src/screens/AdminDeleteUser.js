@@ -17,6 +17,7 @@ import { initializeApp } from 'firebase/app'
 
 
 export default function AdminDeleteUser({ navigation }) {
+    //initialize route and state variables
     const route = useRoute()
 
     const current = route.params?.currentUser || ""
@@ -30,7 +31,7 @@ export default function AdminDeleteUser({ navigation }) {
 
     const [username, setUsername] = useState({ value: '', error: '' })
     const [users, setUsers] = useState({ value: []})
-
+    //return the user cards
     const userCards = users.value.map((item, pos) =>{
 
         return (
@@ -43,6 +44,7 @@ export default function AdminDeleteUser({ navigation }) {
         )
     })
 
+    //function for deleteUser
     const deleteUser = async () => {
         const usersRef = firebase.firestore().collection('Users')
         const accountRef = usersRef.where("username", "==", username.value.toString());
@@ -51,6 +53,7 @@ export default function AdminDeleteUser({ navigation }) {
         if (docOne.empty) {
             console.log('User does not exist!');
         }
+        //delete user and its data from database
         else{
 
             const offerRef = firebase.firestore().collection('DonationOffers')
@@ -93,7 +96,7 @@ export default function AdminDeleteUser({ navigation }) {
         //await deleteDoc(doc(db, "Users", username.value.toString()));
 
     }
-
+    //get all users on page load
     useEffect(() => {
         const getInfo = async () => {
 
